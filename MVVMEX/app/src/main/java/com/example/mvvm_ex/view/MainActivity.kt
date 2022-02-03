@@ -1,4 +1,4 @@
-package com.tistory.deque.kotlinmvvmsample.view
+package com.example.mvvm_ex.view
 
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager

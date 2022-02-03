@@ -1,4 +1,4 @@
-package com.example.mvvm_ex2_githubapi
+package com.example.mvvm_ex2_githubapi.view
 
 import android.content.Context
 import android.content.Intent
@@ -8,8 +8,13 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mvvm_ex2_githubapi.GithubRepository
+import com.example.mvvm_ex2_githubapi.GithubRepositoryAdapter
+import com.example.mvvm_ex2_githubapi.GithubRepositoryItemDecoration
+import com.example.mvvm_ex2_githubapi.MainViewModelFactory
 import com.example.mvvm_ex2_githubapi.databinding.ActivityMainBinding
-import com.example.mvvm_ex2_githubapi.model.GithubRepositoryModel
+import com.example.mvvm_ex2_githubapi.data.remote.model.GithubRepositoryModel
+import com.example.mvvm_ex2_githubapi.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,8 +38,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModelFactory = MainViewModelFactory(GithubRepository())
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+//        viewModelFactory = MainViewModelFactory(GithubRepository())
+//        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+
+        //  가져올 ViewModel의 class 이름으로 가져옴
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.githubRepositories.observe(this) {
             updateRepositories(it)
         }

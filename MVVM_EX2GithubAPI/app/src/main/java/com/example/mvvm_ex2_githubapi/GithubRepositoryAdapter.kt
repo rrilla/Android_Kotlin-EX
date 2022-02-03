@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvm_ex2_githubapi.databinding.ItemGithubRepositoryBinding
-import com.example.mvvm_ex2_githubapi.model.GithubRepositoryModel
+import com.example.mvvm_ex2_githubapi.data.remote.model.GithubRepositoryModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

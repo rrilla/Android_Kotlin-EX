@@ -1,6 +1,6 @@
-package com.example.mvvm_ex2_githubapi
+package com.example.mvvm_ex2_githubapi.data.remote.api
 
-import com.example.mvvm_ex2_githubapi.model.GithubRepositoriesModel
+import com.example.mvvm_ex2_githubapi.data.remote.model.GithubRepositoriesModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

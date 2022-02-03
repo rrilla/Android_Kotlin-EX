@@ -1,7 +1,7 @@
 package com.example.mvvm_ex2_githubapi
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.mvvm_ex2_githubapi.model.GithubRepositoryModel
+import com.example.mvvm_ex2_githubapi.data.remote.model.GithubRepositoryModel
 
 class GithubRepositoryDiffCallback(
     private val oldList: List<GithubRepositoryModel>,
