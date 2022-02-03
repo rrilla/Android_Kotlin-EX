@@ -23,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import java.util.*
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import java.lang.Exception
 
 
@@ -31,10 +32,13 @@ class MainActivity : AppCompatActivity() {
     val TAG = "SignInActivity";
     lateinit var binding: ActivityMainBinding
 
+    private lateinit var googleCredential: GoogleAccountCredential
+
     private val gso: GoogleSignInOptions by lazy {
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
+            .requestIdToken("6954383462-goj5up86ov0aeo2q9ariib3tmks7e67b.apps.googleusercontent.com")
+            .requestServerAuthCode("6954383462-goj5up86ov0aeo2q9ariib3tmks7e67b.apps.googleusercontent.com")
             .build()
     }
 
@@ -49,12 +53,26 @@ class MainActivity : AppCompatActivity() {
             try {
                 task.getResult(ApiException::class.java)?.let { account->
 //                    viewModel.saveToken(account.idToken ?: throw Exception())
-                    Log.e("han", "tostring : ${account.email} ")
+                    val data = """
+            email - ${account?.email}
+            1- ${account?.account}
+            2- ${account?.displayName}
+            3- ${account?.id}
+            4- ${account?.idToken}
+            5- ${account?.familyName}
+            6- ${account?.photoUrl}
+            7- ${account?.serverAuthCode}
+            8- ${account?.grantedScopes}
+        """.trimIndent()
+                    Log.e("han", "data : ${data} ")
                 } ?: throw Exception()
             } catch (e: ApiException) {
                 Log.w(TAG, "signInResult:failed code=" + e.statusCode);
                 //updateUI(null)
             }
+        }else{
+            Log.e("Han", "result no ${GoogleSignIn.getSignedInAccountFromIntent(result.data).exception}")
+
         }
     }
 
@@ -73,6 +91,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         signIn()
+        googleCredential
     }
 
     fun signIn() {
@@ -80,24 +99,24 @@ class MainActivity : AppCompatActivity() {
         Log.e("han", "signIn 실행")
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        // 사용자가 이미 로그인한 경우 기존 Google 로그인 계정을 확인합니다.
-        // GoogleSignInAccount는 Null이 아닙니다.
-        val account = GoogleSignIn.getLastSignedInAccount(this)
-        val data = """
-            email - ${account?.email}
-            1- ${account?.account}
-            2- ${account?.displayName}
-            3- ${account?.id}
-            4- ${account?.idToken}
-            5- ${account?.familyName}
-            6- ${account?.photoUrl}
-            7- ${account?.serverAuthCode}
-            8- ${account?.grantedScopes}
-        """.trimIndent()
-        Log.e("onStart", data)
-    }
+//    override fun onStart() {
+//        super.onStart()
+//
+//        // 사용자가 이미 로그인한 경우 기존 Google 로그인 계정을 확인합니다.
+//        // GoogleSignInAccount는 Null이 아닙니다.
+//        val account = GoogleSignIn.getLastSignedInAccount(this)
+//        val data = """
+//            email - ${account?.email}
+//            1- ${account?.account}
+//            2- ${account?.displayName}
+//            3- ${account?.id}
+//            4- ${account?.idToken}
+//            5- ${account?.familyName}
+//            6- ${account?.photoUrl}
+//            7- ${account?.serverAuthCode}
+//            8- ${account?.grantedScopes}
+//        """.trimIndent()
+//        Log.e("onStart", data)
+//    }
 
 }
