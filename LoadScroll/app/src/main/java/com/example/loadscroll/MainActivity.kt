@@ -65,7 +65,6 @@ class MainActivity : AppCompatActivity() {
     private fun setTransaction() {
         supportFragmentManager.commit {
             add(binding.bodyContainerView.id, TrendingFragment(), "home")
-//            replace(binding.fragmentContainerView.id, firstFragment)
         }
     }
 
