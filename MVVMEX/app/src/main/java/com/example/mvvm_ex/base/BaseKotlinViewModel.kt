@@ -1,4 +1,4 @@
-package com.tistory.deque.kotlinmvvmsample.base
+package com.example.mvvm_ex.base
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel

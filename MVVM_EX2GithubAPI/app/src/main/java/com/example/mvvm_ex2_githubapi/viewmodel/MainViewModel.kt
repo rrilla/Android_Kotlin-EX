@@ -8,11 +8,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-//class MainViewModel(private val githubRepository: GithubRepository): ViewModel() {
-class MainViewModel(): ViewModel() {
+class MainViewModel(private val githubRepository: GithubRepository): ViewModel() {
+//class MainViewModel(): ViewModel() {
     private val _githubRepositories = MutableLiveData<List<GithubRepositoryModel>>()
     val githubRepositories = _githubRepositories
-    private val githubRepository = GithubRepository()
+//    private val githubRepository = GithubRepository()
 
     fun requestGithubRepositories(query: String) {
         CoroutineScope(Dispatchers.IO).launch {

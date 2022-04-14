@@ -3,7 +3,7 @@ package com.example.mvvm_ex.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.tistory.deque.kotlinmvvmsample.base.BaseKotlinViewModel
+import com.example.mvvm_ex.base.BaseKotlinViewModel
 import com.example.mvvm_ex.model.DataModel
 import com.example.mvvm_ex.model.enum.KakaoSearchSortEnum
 import com.example.mvvm_ex.model.response.ImageSearchResponse

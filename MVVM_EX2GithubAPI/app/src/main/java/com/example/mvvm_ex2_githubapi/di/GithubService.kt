@@ -4,8 +4,16 @@ import com.example.mvvm_ex2_githubapi.base.BaseService
 import com.example.mvvm_ex2_githubapi.data.remote.api.GithubApi
 
 //   Singletone으로 관리
-object GithubService {
-    private const val GITHUB_URL = "https://api.github.com"
+object GithubService : BaseService() {
+    override val baseUrl = "https://api.github.com"
 
-    val client = BaseService().getClient(GITHUB_URL)?.create(GithubApi::class.java)
+//    suspend fun getRepositories(query: String){
+//        getClient()?.create(GithubApi::class.java)?.getRepositories(query)
+//    }
+
+//    private val GITHUB_URL = "https://api.github.com"
+
+    val client = getClient()?.create(GithubApi::class.java)
+
+
 }

@@ -38,11 +38,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-//        viewModelFactory = MainViewModelFactory(GithubRepository())
-//        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+        viewModelFactory = MainViewModelFactory(GithubRepository())
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
 
         //  가져올 ViewModel의 class 이름으로 가져옴
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+//        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.githubRepositories.observe(this) {
             updateRepositories(it)
         }

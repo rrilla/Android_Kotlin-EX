@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.snackbar.Snackbar
-import com.tistory.deque.kotlinmvvmsample.base.BaseKotlinViewModel
 
 /**
  * BaseKotlinActivity<ActivitySbsMainBinding>
