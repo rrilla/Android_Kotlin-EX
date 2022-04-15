@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +16,7 @@ import com.example.loadscroll.databinding.FragmentTrendingBinding
 class TrendingFragment : Fragment() {
     lateinit var binding: FragmentTrendingBinding
     lateinit var myStaggeredGridLayoutManager: StaggeredGridLayoutManager
-    private val myAdapter = MyAdapter()
+    lateinit var myAdapter: MyAdapter
     private val viewModel: TrendingViewModel by viewModels()
 
     private val limit = 10  //  api 요청시 받을 데이터 수
@@ -25,6 +24,7 @@ class TrendingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getData(limit)
+        Log.e("hjh", "asdfasdfadf");
     }
 
     override fun onCreateView(
@@ -46,12 +46,18 @@ class TrendingFragment : Fragment() {
         recyclerView.apply {
             myStaggeredGridLayoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
             recyclerView.layoutManager = myStaggeredGridLayoutManager
+            myAdapter = MyAdapter()
             recyclerView.adapter = myAdapter
         }
 
         myAdapter.setItemClickListener { v, position, isChecked ->
             if(isChecked){
-                Log.e("hjh", "클릭한놈 아이디 : ${myAdapter.items[position].id}")
+                Log.e("hjh", "변한놈 아이디 : ${viewModel.giphyLiveData.value!!.data[position].id}")
+                viewModel.insertGifId(viewModel.giphyLiveData.value!!.data[position].id, position)
+//                myAdapter.items[position].images.fixed_width.isFavorite = true
+            }else{
+                viewModel.deleteGifId(viewModel.giphyLiveData.value!!.data[position].id, position)
+//                myAdapter.items[position].images.fixed_width.isFavorite = false
             }
         }
 
@@ -63,7 +69,7 @@ class TrendingFragment : Fragment() {
     }
 
     private fun observeData() {
-        viewModel.gifLiveData.observe(viewLifecycleOwner) {
+        viewModel.giphyLiveData.observe(viewLifecycleOwner) {
             myAdapter.addItem(it)
         }
 
