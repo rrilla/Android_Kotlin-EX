@@ -46,7 +46,7 @@ class TrendingViewModel: ViewModel() {
                     }
                     setGiphyData(giphyData)
                     page++
-                    //  count가 요청 페이지(limit)보다 낮을때 마지막페이지
+                    //  count가 요청 데이터(limit)보다 작을때 마지막페이지
                     Log.e("hjh", "Giphy Api 호출" +
                             "\n offset(시작 위치) : ${giphyData.pagination.offset}" +
                             "\n count(반환 데이터 수) : ${giphyData.pagination.count}"

@@ -24,7 +24,6 @@ class TrendingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getData(limit)
-        Log.e("hjh", "asdfasdfadf");
     }
 
     override fun onCreateView(
@@ -65,7 +64,7 @@ class TrendingFragment : Fragment() {
 //        recyclerView.addOnScrollListener(RvListener())
 
         //  NestedScrollView로 스크롤 하단 체크
-        nestScrollView.setOnScrollChangeListener(NvListener())
+        nestedScrollView.setOnScrollChangeListener(NvListener())
     }
 
     private fun observeData() {

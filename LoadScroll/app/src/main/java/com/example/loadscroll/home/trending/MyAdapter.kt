@@ -11,7 +11,7 @@ import com.example.loadscroll.data.model.Data
 import com.example.loadscroll.data.model.GiphyListModel
 import com.example.loadscroll.databinding.ItemRecyclerviewBinding
 
-class MyAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class MyAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     private val items = mutableListOf<Data>()
     private lateinit var itemClickListener : OnItemClickListener
 

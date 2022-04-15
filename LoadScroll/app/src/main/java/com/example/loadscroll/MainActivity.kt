@@ -10,8 +10,6 @@ import com.example.loadscroll.mypage.favorites.FavoritesFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    val trendingFragment = TrendingFragment()
-    val favoritesFragment = FavoritesFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                         supportFragmentManager.commit {
                             val fragment1: Fragment? = supportFragmentManager.findFragmentByTag("home")
                             if(fragment1 != null) {
-                                replace(binding.bodyContainerView.id, trendingFragment)
+                                replace(binding.bodyContainerView.id, fragment1)
                             }
                         }
                         true
@@ -46,22 +44,14 @@ class MainActivity : AppCompatActivity() {
                         false
                     }else{
                         supportFragmentManager.commit {
-//                            var fragment2: Fragment? = supportFragmentManager.findFragmentByTag("myPage")
-//                            if(fragment2 == null) {
-//                                fragment2 = FavoritesFragment()
-//                                // BackStack에 이전Fragment 저장
-//                                addToBackStack(null)
-//                                replace(binding.bodyContainerView.id, fragment2, "myPage")
-//                            }else{
-//                                replace(binding.bodyContainerView.id, fragment2)
-//                            }
                             var fragment2: Fragment? = supportFragmentManager.findFragmentByTag("myPage")
                             if(fragment2 == null) {
+                                fragment2 = FavoritesFragment()
                                 // BackStack에 이전Fragment 저장
                                 addToBackStack(null)
-                                replace(binding.bodyContainerView.id, favoritesFragment, "myPage")
+                                replace(binding.bodyContainerView.id, fragment2, "myPage")
                             }else{
-                                replace(binding.bodyContainerView.id, favoritesFragment)
+                                replace(binding.bodyContainerView.id, fragment2)
                             }
                         }
                         true
@@ -74,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setTransaction() {
         supportFragmentManager.commit {
-            add(binding.bodyContainerView.id, trendingFragment, "home")
+            add(binding.bodyContainerView.id, TrendingFragment(), "home")
         }
     }
 
