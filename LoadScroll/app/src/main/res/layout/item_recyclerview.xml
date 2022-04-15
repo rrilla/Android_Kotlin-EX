@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="0dp"
+    android:layout_margin="4dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/ic_launcher"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"/>
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="bottom|right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</androidx.cardview.widget.CardView>
+
+
+<!--<RelativeLayout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_margin="4dp">-->
+
+<!--    &lt;!&ndash;For image src we have used ic_launcher-->
+<!--        it is used only for reference how it will look"&ndash;&gt;-->
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:src="@mipmap/ic_launcher"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            android:scaleType="fitXY"/>-->
+
+<!--</RelativeLayout>-->
