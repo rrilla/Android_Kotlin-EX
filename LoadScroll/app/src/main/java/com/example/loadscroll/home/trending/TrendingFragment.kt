@@ -20,7 +20,7 @@ class TrendingFragment : Fragment() {
     private val myAdapter = MyAdapter()
     private val viewModel: TrendingViewModel by viewModels()
 
-    private val limit = 10
+    private val limit = 10  //  api 요청시 받을 데이터 수
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +49,15 @@ class TrendingFragment : Fragment() {
             recyclerView.adapter = myAdapter
         }
 
+        myAdapter.setItemClickListener { v, position, isChecked ->
+            if(isChecked){
+                Log.e("hjh", "클릭한놈 아이디 : ${myAdapter.items[position].id}")
+            }
+        }
 
         //  RecyclerView로 스크롤 하단 체크 - xml의 NestedScrollView 제거
 //        recyclerView.addOnScrollListener(RvListener())
-        
+
         //  NestedScrollView로 스크롤 하단 체크
         nestScrollView.setOnScrollChangeListener(NvListener())
     }

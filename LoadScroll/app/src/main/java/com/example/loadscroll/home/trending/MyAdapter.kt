@@ -1,18 +1,31 @@
 package com.example.loadscroll.home.trending
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.loadscroll.data.model.Data
-import com.example.loadscroll.data.model.Gif
 import com.example.loadscroll.data.model.GiphyListModel
 import com.example.loadscroll.databinding.ItemRecyclerviewBinding
 
 class MyAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>(){
-    private val items = mutableListOf<Data>()
+    val items = mutableListOf<Data>()
+    private lateinit var itemClickListener : OnItemClickListener
+
+    interface OnItemClickListener {
+        fun onChange(v: View, position: Int, isChecked: Boolean)
+    }
+
+    fun setItemClickListener(onItemClickListener: (v: View, position: Int, isChecked: Boolean)->Unit) {
+        this.itemClickListener = object: OnItemClickListener {
+            override fun onChange(v: View, position: Int, isChecked: Boolean) {
+                onItemClickListener(v, position, isChecked)
+            }
+        }
+    }
 
     override fun getItemCount(): Int{
         return items.size
@@ -31,6 +44,9 @@ class MyAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding=(holder as MyViewHolder).binding
 
+        binding.switch1.setOnCheckedChangeListener { buttonView, isChecked ->
+            itemClickListener.onChange(buttonView, position, isChecked)
+        }
         binding.imageView.minimumHeight = items[position].images.fixed_width.height.toInt()
         Glide.with(binding.root)
             .load(items[position].images.fixed_width.url)

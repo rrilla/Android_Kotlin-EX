@@ -16,7 +16,7 @@ import retrofit2.Response
 
 class TrendingViewModel: ViewModel() {
 
-    private var page = 0  // result 시작 위치
+    private var page = 0  // page * limit = offset(조회 데이터 시작위치)
 
     private var _loadingStateData = MutableLiveData<LoadingState>(LoadingState.Last)
     val loadingStateData: LiveData<LoadingState> = _loadingStateData
@@ -50,7 +50,6 @@ class TrendingViewModel: ViewModel() {
                 }
             })
     }
-
 
     private fun setGiphyData(data: GiphyListModel) {
         _gifLiveData.postValue(data);
