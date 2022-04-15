@@ -1,4 +1,4 @@
-package com.example.loadscroll.home.trending
+package com.example.loadscroll.mypage.favorites
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -10,6 +10,7 @@ import com.example.loadscroll.MyApplication
 import com.example.loadscroll.data.db.Favorite
 import com.example.loadscroll.data.model.Gif
 import com.example.loadscroll.data.model.GiphyListModel
+import com.example.loadscroll.home.trending.LoadingState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -18,9 +19,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class TrendingViewModel: ViewModel() {
+class FavoritesViewModel: ViewModel() {
 
-    private var page = 0  // page * limit = offset(조회 데이터 시작위치)
+    private val count = 10
 
     private var _loadingStateData = MutableLiveData<LoadingState>(LoadingState.Last)
     val loadingStateData: LiveData<LoadingState> = _loadingStateData
@@ -28,34 +29,24 @@ class TrendingViewModel: ViewModel() {
     private var _giphyLiveData = MutableLiveData<GiphyListModel>()
     val giphyLiveData: LiveData<GiphyListModel> = _giphyLiveData
 
-    fun getData(limit: Int): Job = viewModelScope.launch {
+    fun getData(): Job = viewModelScope.launch {
         setLoadingState(LoadingState.Loading)
-        val favoriteList: List<Favorite> = selectAllDbFavorite()
-        MyApplication.networkService.getTrendingList(
-            BuildConfig.GIPHY_API_KEY,
-            limit, page * limit)
+        val ids: String = selectAllDbFavorite()
+        MyApplication.networkService.getListById(
+            BuildConfig.GIPHY_API_KEY, ids)
             .enqueue(object: Callback<GiphyListModel> {
                 override fun onResponse(call: Call<GiphyListModel>, response: Response<GiphyListModel>) {
                     val giphyData: GiphyListModel = response.body()!!
                     for(giphy in giphyData.data){
-                        for(favorite in favoriteList){
-                            if(giphy.id == favorite.gifId){
-                                giphy.images.fixed_width.isFavorite = true
-                            }
-                        }
+                        giphy.images.fixed_width.isFavorite = true
                     }
                     setGiphyData(giphyData)
-                    page++
                     //  count가 요청 데이터(limit)보다 작을때 마지막페이지
                     Log.e("hjh", "Giphy Api 호출" +
                             "\n offset(시작 위치) : ${giphyData.pagination.offset}" +
                             "\n count(반환 데이터 수) : ${giphyData.pagination.count}"
                     )
-                    if(giphyData.pagination.count > limit) {
-                        setLoadingState(LoadingState.Last)
-                    }else{
-                        setLoadingState(LoadingState.Success)
-                    }
+                    setLoadingState(LoadingState.Success)
                 }
                 override fun onFailure(call: Call<GiphyListModel>, t: Throwable) {
                     t.printStackTrace()
@@ -64,18 +55,18 @@ class TrendingViewModel: ViewModel() {
     }
 
     private fun setGiphyData(data: GiphyListModel) {
-        _giphyLiveData.postValue(data)
+        _giphyLiveData.postValue(data);
     }
 
     private fun setLoadingState(state: LoadingState) {
         _loadingStateData.postValue(state)
     }
 
-    fun insertGifId(gifId: String) = viewModelScope.launch{
+    fun insertGifId(gifId: String, position: Int) = viewModelScope.launch{
         insertDbFavorite(gifId)
     }
 
-    fun deleteGifId(gifId: String) = viewModelScope.launch{
+    fun deleteGifId(gifId: String, position: Int) = viewModelScope.launch{
         deleteDbFavorite(gifId)
     }
 
@@ -89,7 +80,11 @@ class TrendingViewModel: ViewModel() {
 
     private suspend fun selectAllDbFavorite() = withContext(Dispatchers.IO){
         val data = MyApplication.dataBase.favoriteDao().getAll()
-        Log.e("hjh", data.toString())
-        return@withContext data
+        var ids = ""
+        for(item in data){
+            ids += "${item.gifId},"
+        }
+        Log.e("hjh", ids)
+        return@withContext ids
     }
 }

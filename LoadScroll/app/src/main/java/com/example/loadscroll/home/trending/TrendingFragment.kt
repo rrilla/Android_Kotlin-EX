@@ -50,12 +50,11 @@ class TrendingFragment : Fragment() {
         }
 
         myAdapter.setItemClickListener { v, position, isChecked ->
+            Log.e("hjh", "변한놈 아이디 : ${myAdapter.items[position].id}")
             if(isChecked){
-                Log.e("hjh", "변한놈 아이디 : ${viewModel.giphyLiveData.value!!.data[position].id}")
-                viewModel.insertGifId(viewModel.giphyLiveData.value!!.data[position].id, position)
-//                myAdapter.items[position].images.fixed_width.isFavorite = true
+                viewModel.insertGifId(myAdapter.items[position].id)
             }else{
-                viewModel.deleteGifId(viewModel.giphyLiveData.value!!.data[position].id, position)
+                viewModel.deleteGifId(myAdapter.items[position].id)
 //                myAdapter.items[position].images.fixed_width.isFavorite = false
             }
         }

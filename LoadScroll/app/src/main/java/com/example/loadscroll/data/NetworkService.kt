@@ -7,9 +7,15 @@ import retrofit2.http.Query
 
 interface NetworkService {
     @GET("/v1/gifs/trending")
-    fun getList(
-        @Query("api_key") api_key: String?,
+    fun getTrendingList(
+        @Query("api_key") api_key: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
+    ): Call<GiphyListModel>
+
+    @GET("/v1/gifs")
+    fun getListById(
+        @Query("api_key") api_key: String,
+        @Query("ids") ids: String,
     ): Call<GiphyListModel>
 }
