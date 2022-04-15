@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.loadscroll.BuildConfig
 import com.example.loadscroll.MyApplication
 import com.example.loadscroll.data.model.Gif
 import com.example.loadscroll.data.model.GiphyListModel
@@ -27,7 +28,7 @@ class TrendingViewModel: ViewModel() {
     fun getData(limit: Int): Job = viewModelScope.launch {
         setLoadingState(LoadingState.Loading)
         MyApplication.networkService.getList(
-            MyApplication.API_KEY,
+            BuildConfig.GIPHY_API_KEY,
             limit, page * limit)
             .enqueue(object: Callback<GiphyListModel> {
                 override fun onResponse(call: Call<GiphyListModel>, response: Response<GiphyListModel>) {
