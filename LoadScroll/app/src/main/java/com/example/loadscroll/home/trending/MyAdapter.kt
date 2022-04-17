@@ -3,8 +3,6 @@ package com.example.loadscroll.home.trending
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.loadscroll.data.model.Data
@@ -12,7 +10,7 @@ import com.example.loadscroll.data.model.GiphyListModel
 import com.example.loadscroll.databinding.ItemRecyclerviewBinding
 
 class MyAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>(){
-    val items = mutableListOf<Data>()
+    private val items = mutableListOf<Data>()
     private lateinit var itemClickListener : OnItemClickListener
 
     interface OnItemClickListener {
@@ -32,17 +30,23 @@ class MyAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     }
 
     fun addItem(data: GiphyListModel){
+        items.clear()
         items.addAll(data.data)
         val count = data.pagination.count
         //특정 위치에 아이템이 새로 삽입시 업데이트
-        notifyItemRangeInserted(items.size-count, count)
+        notifyItemRangeInserted(data.data.size - count, count)
+    }
+
+    fun delItem(position: Int){
+        items.removeAt(position)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
             = MyViewHolder(ItemRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val binding=(holder as MyViewHolder).binding
+        val binding = (holder as MyViewHolder).binding
 
         binding.switch1.isChecked = items[position].images.fixed_width.isFavorite
         binding.switch1.setOnCheckedChangeListener { buttonView, isChecked ->

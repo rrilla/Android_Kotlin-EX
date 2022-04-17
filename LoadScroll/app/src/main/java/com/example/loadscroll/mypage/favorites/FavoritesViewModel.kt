@@ -21,8 +21,6 @@ import retrofit2.Response
 
 class FavoritesViewModel: ViewModel() {
 
-    private val count = 10
-
     private var _loadingStateData = MutableLiveData<LoadingState>(LoadingState.Last)
     val loadingStateData: LiveData<LoadingState> = _loadingStateData
 
@@ -31,7 +29,11 @@ class FavoritesViewModel: ViewModel() {
 
     fun getData(): Job = viewModelScope.launch {
         setLoadingState(LoadingState.Loading)
-        val ids: String = selectAllDbFavorite()
+        val ids: String? = selectAllDbFavorite()
+        if(ids == null){
+            setLoadingState(LoadingState.None)
+            return@launch
+        }
         MyApplication.networkService.getListById(
             BuildConfig.GIPHY_API_KEY, ids)
             .enqueue(object: Callback<GiphyListModel> {
@@ -55,23 +57,18 @@ class FavoritesViewModel: ViewModel() {
     }
 
     private fun setGiphyData(data: GiphyListModel) {
-        _giphyLiveData.postValue(data);
+        _giphyLiveData.postValue(data)
     }
 
     private fun setLoadingState(state: LoadingState) {
         _loadingStateData.postValue(state)
     }
 
-    fun insertGifId(gifId: String, position: Int) = viewModelScope.launch{
-        insertDbFavorite(gifId)
-    }
-
-    fun deleteGifId(gifId: String, position: Int) = viewModelScope.launch{
-        deleteDbFavorite(gifId)
-    }
-
-    private suspend fun insertDbFavorite(gifId: String) = withContext(Dispatchers.IO) {
-        return@withContext MyApplication.dataBase.favoriteDao().insert(Favorite(gifId))
+    fun deleteGifId(position: Int) = viewModelScope.launch{
+        _giphyLiveData.value?.let {
+            deleteDbFavorite(it.data[position].id)
+            it.data.removeAt(position)
+        }
     }
 
     private suspend fun deleteDbFavorite(gifId: String) = withContext(Dispatchers.IO) {
@@ -80,11 +77,11 @@ class FavoritesViewModel: ViewModel() {
 
     private suspend fun selectAllDbFavorite() = withContext(Dispatchers.IO){
         val data = MyApplication.dataBase.favoriteDao().getAll()
-        var ids = ""
-        for(item in data){
+        if(data.isEmpty()) return@withContext null
+        var ids: String? = ""
+        for(item in data) {
             ids += "${item.gifId},"
         }
-        Log.e("hjh", ids)
         return@withContext ids
     }
 }

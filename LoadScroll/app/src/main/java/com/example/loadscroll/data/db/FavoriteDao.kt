@@ -9,7 +9,7 @@ import androidx.room.Query
 interface FavoriteDao {
 
     @Query("SELECT * FROM favorite")
-    fun getAll(): List<Favorite>
+    fun getAll(): MutableList<Favorite>
 
     @Insert
     fun insert(favorite: Favorite)
