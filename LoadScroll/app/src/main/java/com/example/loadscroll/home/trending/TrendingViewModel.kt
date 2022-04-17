@@ -21,6 +21,7 @@ import retrofit2.Response
 class TrendingViewModel: ViewModel() {
 
     private var page = 0  // page * limit = offset(조회 데이터 시작위치)
+    private var favoriteList: List<Favorite>? = null
 
     private var _loadingStateData = MutableLiveData<LoadingState>(LoadingState.Last)
     val loadingStateData: LiveData<LoadingState> = _loadingStateData
@@ -30,17 +31,21 @@ class TrendingViewModel: ViewModel() {
 
     fun getData(limit: Int): Job = viewModelScope.launch {
         setLoadingState(LoadingState.Loading)
-        val favoriteList: List<Favorite> = selectAllDbFavorite()
+        if(favoriteList == null){
+            favoriteList = selectAllDbFavorite()
+        }
         MyApplication.networkService.getTrendingList(
             BuildConfig.GIPHY_API_KEY,
             limit, page * limit)
             .enqueue(object: Callback<GiphyListModel> {
                 override fun onResponse(call: Call<GiphyListModel>, response: Response<GiphyListModel>) {
                     val giphyData: GiphyListModel = response.body()!!
-                    for(giphy in giphyData.data){
-                        for(favorite in favoriteList){
-                            if(giphy.id == favorite.gifId){
-                                giphy.images.fixed_width.isFavorite = true
+                    if(favoriteList!!.isNotEmpty()) {
+                        for (giphy in giphyData.data) {
+                            for (favorite in favoriteList!!) {
+                                if (giphy.id == favorite.gifId) {
+                                    giphy.images.fixed_width.isFavorite = true
+                                }
                             }
                         }
                     }
@@ -64,6 +69,12 @@ class TrendingViewModel: ViewModel() {
     }
 
     private fun setGiphyData(data: GiphyListModel) {
+        _giphyLiveData.value?.let {
+            val preData = it.data
+            preData.addAll(data.data)
+            data.data.clear()
+            data.data.addAll(preData)
+        }
         _giphyLiveData.postValue(data)
     }
 
@@ -71,12 +82,18 @@ class TrendingViewModel: ViewModel() {
         _loadingStateData.postValue(state)
     }
 
-    fun insertGifId(gifId: String) = viewModelScope.launch{
-        insertDbFavorite(gifId)
+    fun insertGifId(position: Int) = viewModelScope.launch{
+        _giphyLiveData.value?.data?.get(position)?.let {
+            insertDbFavorite(it.id)
+            it.images.fixed_width.isFavorite = true
+        }
     }
 
-    fun deleteGifId(gifId: String) = viewModelScope.launch{
-        deleteDbFavorite(gifId)
+    fun deleteGifId(position: Int) = viewModelScope.launch{
+        _giphyLiveData.value?.data?.get(position)?.let {
+            deleteDbFavorite(it.id)
+            it.images.fixed_width.isFavorite = false
+        }
     }
 
     private suspend fun insertDbFavorite(gifId: String) = withContext(Dispatchers.IO) {
@@ -88,8 +105,6 @@ class TrendingViewModel: ViewModel() {
     }
 
     private suspend fun selectAllDbFavorite() = withContext(Dispatchers.IO){
-        val data = MyApplication.dataBase.favoriteDao().getAll()
-        Log.e("hjh", data.toString())
-        return@withContext data
+        return@withContext MyApplication.dataBase.favoriteDao().getAll()
     }
 }

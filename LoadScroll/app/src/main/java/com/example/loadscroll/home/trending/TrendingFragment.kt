@@ -16,7 +16,7 @@ import com.example.loadscroll.databinding.FragmentTrendingBinding
 class TrendingFragment : Fragment() {
     lateinit var binding: FragmentTrendingBinding
     lateinit var myStaggeredGridLayoutManager: StaggeredGridLayoutManager
-    lateinit var myAdapter: MyAdapter
+    private val myAdapter: MyAdapter = MyAdapter()
     private val viewModel: TrendingViewModel by viewModels()
 
     private val limit = 10  //  api 요청시 받을 데이터 수
@@ -45,17 +45,15 @@ class TrendingFragment : Fragment() {
         recyclerView.apply {
             myStaggeredGridLayoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
             recyclerView.layoutManager = myStaggeredGridLayoutManager
-            myAdapter = MyAdapter()
             recyclerView.adapter = myAdapter
         }
 
         myAdapter.setItemClickListener { v, position, isChecked ->
-            Log.e("hjh", "변한놈 아이디 : ${myAdapter.items[position].id}")
+            Log.e("hjh", "position - $position")
             if(isChecked){
-                viewModel.insertGifId(myAdapter.items[position].id)
+                viewModel.insertGifId(position)
             }else{
-                viewModel.deleteGifId(myAdapter.items[position].id)
-//                myAdapter.items[position].images.fixed_width.isFavorite = false
+                viewModel.deleteGifId(position)
             }
         }
 

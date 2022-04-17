@@ -22,7 +22,7 @@ import com.example.loadscroll.home.trending.TrendingViewModel
 class FavoritesFragment : Fragment() {
     lateinit var binding: FragmentFavoritesBinding
     lateinit var myStaggeredGridLayoutManager: StaggeredGridLayoutManager
-    lateinit var myAdapter: MyAdapter
+    private val myAdapter = MyAdapter()
     private val viewModel: FavoritesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,18 +49,13 @@ class FavoritesFragment : Fragment() {
         recyclerView.apply {
             myStaggeredGridLayoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
             recyclerView.layoutManager = myStaggeredGridLayoutManager
-            myAdapter = MyAdapter()
             recyclerView.adapter = myAdapter
         }
 
         myAdapter.setItemClickListener { v, position, isChecked ->
-            if(isChecked){
-                Log.e("hjh", "변한놈 아이디 : ${viewModel.giphyLiveData.value!!.data[position].id}")
-                viewModel.insertGifId(viewModel.giphyLiveData.value!!.data[position].id, position)
-//                myAdapter.items[position].images.fixed_width.isFavorite = true
-            }else{
-                viewModel.deleteGifId(viewModel.giphyLiveData.value!!.data[position].id, position)
-//                myAdapter.items[position].images.fixed_width.isFavorite = false
+            if(!isChecked){
+                viewModel.deleteGifId(position)
+                myAdapter.delItem(position)
             }
         }
 
@@ -80,7 +75,10 @@ class FavoritesFragment : Fragment() {
             when (it) {
                 is LoadingState.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is LoadingState.Success -> binding.progressBar.visibility = View.GONE
-//                is LoadingState.Last -> handleSuccessState(it)
+                is LoadingState.None -> {
+                    binding.progressBar.visibility = View.GONE
+                    //  아직 좋아요 데이터 없음 표시 UI
+                }
                 else -> {}
             }
         }
@@ -101,7 +99,7 @@ class FavoritesFragment : Fragment() {
             if (!binding.recyclerView.canScrollVertically(1)) {
                 if(viewModel.loadingStateData.value == LoadingState.Success){
                     Log.e("hjh", "rv스크롤 하단 도착, 데이터 요청")
-                    viewModel.getData()
+//                    viewModel.getData()
                 }else{
                     //  마지막 페이지 ui 띄우기
                     Log.e("hjh", "마지막 페이지")

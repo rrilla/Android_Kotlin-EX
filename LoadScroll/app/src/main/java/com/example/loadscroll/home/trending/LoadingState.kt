@@ -1,7 +1,7 @@
 package com.example.loadscroll.home.trending
 
 sealed class LoadingState {
-    object Request: LoadingState()
+    object None: LoadingState()
 
     object Loading: LoadingState()
 
