@@ -1,11 +1,9 @@
-package com.example.booksearchapp
+package com.example.booksearchapp.ui.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.booksearchapp.R
 import com.example.booksearchapp.databinding.ActivityMainBinding
-import com.example.booksearchapp.ui.view.FavoriteFragment
-import com.example.booksearchapp.ui.view.SearchFragment
-import com.example.booksearchapp.ui.view.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
