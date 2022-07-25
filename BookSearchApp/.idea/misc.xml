@@ -5,8 +5,9 @@
       <map>
         <entry key="..\:/git/Android_Kotlin-EX/BookSearchApp/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
         <entry key="..\:/git/Android_Kotlin-EX/BookSearchApp/app/src/main/res/layout/fragment_favorite.xml" value="0.3515625" />
-        <entry key="..\:/git/Android_Kotlin-EX/BookSearchApp/app/src/main/res/layout/fragment_search.xml" value="0.358695652173913" />
+        <entry key="..\:/git/Android_Kotlin-EX/BookSearchApp/app/src/main/res/layout/fragment_search.xml" value="0.1" />
         <entry key="..\:/git/Android_Kotlin-EX/BookSearchApp/app/src/main/res/layout/fragment_settings.xml" value="0.358695652173913" />
+        <entry key="..\:/git/Android_Kotlin-EX/BookSearchApp/app/src/main/res/layout/item_book_preview.xml" value="0.1875" />
         <entry key="..\:/git/Android_Kotlin-EX/BookSearchApp/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.36614583333333334" />
       </map>
     </option>

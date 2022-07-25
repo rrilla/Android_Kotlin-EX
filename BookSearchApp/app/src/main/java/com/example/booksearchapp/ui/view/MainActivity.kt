@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
         setupBottomNavigationView()
         if (savedInstanceState == null) {
@@ -25,12 +25,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         val bookSearchRepository = BookSearchRepositoryImpl()
-        val factory = BookSearchViewModelProviderFactory(bookSearchRepository)
+        val factory = BookSearchViewModelProviderFactory(bookSearchRepository, this)
         bookSearchViewModel = ViewModelProvider(this, factory)[BookSearchViewModel::class.java]
     }
 
     private fun setupBottomNavigationView() {
-        binding.bottomNavigationView.setOnItemReselectedListener { item ->
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.fragment_search -> {
                     supportFragmentManager.beginTransaction()
