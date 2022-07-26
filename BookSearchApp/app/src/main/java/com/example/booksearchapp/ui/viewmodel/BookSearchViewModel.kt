@@ -1,9 +1,14 @@
 package com.example.booksearchapp.ui.viewmodel
 
 import androidx.lifecycle.*
+import com.example.booksearchapp.data.model.Book
 import com.example.booksearchapp.data.model.SearchResponse
 import com.example.booksearchapp.data.model.repository.BookSearchRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class BookSearchViewModel(
@@ -23,6 +28,21 @@ class BookSearchViewModel(
             }
         }
     }
+
+    // Room
+    fun saveBook(book: Book) = viewModelScope.launch(Dispatchers.IO) {
+        bookSearchRepository.insertBooks(book)
+    }
+
+    // viewModelScope의 기본 dispatchers가 main이기에 파일입출력 IO로 변경
+    fun deleteBook(book: Book) = viewModelScope.launch(Dispatchers.IO) {
+        bookSearchRepository.deleteBooks(book)
+    }
+
+    //    val favoriteBooks: LiveData<List<Book>> = bookSearchRepository.getFavoriteBooks()
+    //    val favoriteBooks: Flow<List<Book>> = bookSearchRepository.getFavoriteBooks()
+    val favoriteBooks: StateFlow<List<Book>> = bookSearchRepository.getFavoriteBooks()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     // SavedState
     var query = String()

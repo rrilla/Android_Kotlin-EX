@@ -3,6 +3,7 @@ package com.example.booksearchapp.data.model.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.booksearchapp.data.model.Book
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BookSearchDao {
@@ -14,5 +15,6 @@ interface BookSearchDao {
     suspend fun deleteBook(book: Book)
 
     @Query("SELECT * FROM books")
-    fun getFavoriteBooks(): LiveData<List<Book>>
+//    fun getFavoriteBooks(): LiveData<List<Book>>
+    fun getFavoriteBooks(): Flow<List<Book>>
 }
