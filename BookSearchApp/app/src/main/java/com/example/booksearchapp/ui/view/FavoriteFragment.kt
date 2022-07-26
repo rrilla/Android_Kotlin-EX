@@ -64,6 +64,7 @@ class FavoriteFragment : Fragment() {
 //            }
 //        }
 
+        //  확장함수로 반복되는 코드작업 줄여 사용
         collectLatestStateFlow(bookSearchViewModel.favoriteBooks) {
             bookSearchAdapter.submitList(it)
         }
