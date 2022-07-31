@@ -1,18 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="100dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:clipToPadding="false">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/standardBottomSheetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show Standard Bottom Sheet" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/modalBottomSheetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show Modal Bottom Sheet" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toggleModalDismissAnimationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toggle modal dismiss animation" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/standardBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="?attr/bottomSheetStyle"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <View
+            android:id="@+id/slideView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="Bottom Sheet"
+            android:gravity="center" />
+
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
