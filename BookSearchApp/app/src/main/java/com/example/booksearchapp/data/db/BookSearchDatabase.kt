@@ -1,4 +1,4 @@
-package com.example.booksearchapp.data.model.db
+package com.example.booksearchapp.data.db
 
 import android.content.Context
 import androidx.room.Database

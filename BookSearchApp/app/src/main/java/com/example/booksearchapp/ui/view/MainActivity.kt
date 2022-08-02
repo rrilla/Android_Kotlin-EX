@@ -9,8 +9,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.booksearchapp.R
-import com.example.booksearchapp.data.model.db.BookSearchDatabase
-import com.example.booksearchapp.data.model.repository.BookSearchRepositoryImpl
+import com.example.booksearchapp.data.db.BookSearchDatabase
+import com.example.booksearchapp.data.repository.BookSearchRepositoryImpl
 import com.example.booksearchapp.databinding.ActivityMainBinding
 import com.example.booksearchapp.ui.viewmodel.BookSearchViewModel
 import com.example.booksearchapp.ui.viewmodel.BookSearchViewModelProviderFactory

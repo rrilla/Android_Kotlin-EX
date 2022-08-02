@@ -5,7 +5,7 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
-import com.example.booksearchapp.data.model.repository.BookSearchRepository
+import com.example.booksearchapp.data.repository.BookSearchRepository
 
 @Suppress("UNCHECKED_CAST")
 class BookSearchViewModelProviderFactory(

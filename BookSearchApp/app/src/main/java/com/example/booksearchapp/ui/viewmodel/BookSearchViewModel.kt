@@ -2,11 +2,14 @@ package com.example.booksearchapp.ui.viewmodel
 
 import androidx.lifecycle.*
 import com.example.booksearchapp.data.model.Book
+import com.example.booksearchapp.data.model.News
 import com.example.booksearchapp.data.model.SearchResponse
-import com.example.booksearchapp.data.model.repository.BookSearchRepository
+import com.example.booksearchapp.data.repository.BookSearchRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class BookSearchViewModel(
     private val bookSearchRepository: BookSearchRepository,
@@ -16,6 +19,11 @@ class BookSearchViewModel(
     // Api
     private val _searchResult = MutableLiveData<SearchResponse>()
     val searchResult: LiveData<SearchResponse> get() = _searchResult
+
+    val latestNews: Flow<News> = bookSearchRepository.latestNews("서울")
+    val favoriteLatestNews = latestNews.map {  }.onEach {  } // 중개자로 데이터 가공
+
+
 
     val searchResultFlow: Flow<SearchResponse> = flow {
         val response = bookSearchRepository.searchBooks(query, "accuracy", 1, 15)

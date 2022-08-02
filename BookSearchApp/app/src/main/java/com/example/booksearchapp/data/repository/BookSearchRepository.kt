@@ -1,7 +1,7 @@
-package com.example.booksearchapp.data.model.repository
+package com.example.booksearchapp.data.repository
 
-import androidx.lifecycle.LiveData
 import com.example.booksearchapp.data.model.Book
+import com.example.booksearchapp.data.model.News
 import com.example.booksearchapp.data.model.SearchResponse
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
@@ -15,6 +15,7 @@ interface BookSearchRepository {
         size: Int,
     ): Response<SearchResponse>
 
+    fun latestNews(query: String): Flow<News>
     // Room
     suspend fun insertBooks(book: Book)
 

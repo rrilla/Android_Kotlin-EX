@@ -1,6 +1,5 @@
-package com.example.booksearchapp.data.model.db
+package com.example.booksearchapp.data.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.booksearchapp.data.model.Book
 import kotlinx.coroutines.flow.Flow
