@@ -10,15 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.os.bundleOf
+import androidx.recyclerview.widget.RecyclerView
 import com.example.test_bottomsheet.databinding.ActivityMain2Binding
 import com.example.test_bottomsheet.databinding.ActivityMainBinding
+import com.example.test_bottomsheet.databinding.ItemRecyclerviewBinding
 import com.google.android.material.animation.ArgbEvaluatorCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMain2Binding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<View>
 
     private val startColor = Color.parseColor("#00FFFFFF")
@@ -29,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMain2Binding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupButtons()
 //        setupStandardBottomSheet()
@@ -76,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 //    }
 
     private fun showModalBottomSheet() {
-        val modalBottomSheet = ModalBottomSheet.newInstance(modalDismissWithAnimation)
+        val modalBottomSheet = ModalBottomSheet()
         modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
     }
 
@@ -98,3 +100,5 @@ class MainActivity : AppCompatActivity() {
 //        }, 5000L)
 //    }
 }
+
+
