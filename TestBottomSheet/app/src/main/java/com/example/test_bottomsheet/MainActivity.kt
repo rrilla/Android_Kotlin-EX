@@ -1,26 +1,19 @@
 package com.example.test_bottomsheet
 
-import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import androidx.core.os.bundleOf
-import androidx.recyclerview.widget.RecyclerView
-import com.example.test_bottomsheet.databinding.ActivityMain2Binding
 import com.example.test_bottomsheet.databinding.ActivityMainBinding
-import com.example.test_bottomsheet.databinding.ItemRecyclerviewBinding
-import com.google.android.material.animation.ArgbEvaluatorCompat
+import com.example.test_bottomsheet.databinding.ContentBinding
+import com.example.test_bottomsheet.test.TestActivity
+import com.example.test_bottomsheet.test.TestModal
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var binding2: ContentBinding
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<View>
 
     private val startColor = Color.parseColor("#00FFFFFF")
@@ -32,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        binding2 = ContentBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupButtons()
 //        setupStandardBottomSheet()
@@ -43,11 +37,16 @@ class MainActivity : AppCompatActivity() {
 //            standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 //        }
         binding.modalBottomSheetButton.setOnClickListener {
-            showModalBottomSheet()
+            val modalBottomSheet = TestModal()
+            modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
         }
 //        binding.toggleModalDismissAnimationButton.setOnClickListener {
 //            modalDismissWithAnimation = !modalDismissWithAnimation
 //        }
+        binding.moveTestActivity.setOnClickListener {
+            val intent = Intent(this, TestActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 //    private fun setupStandardBottomSheet() {
@@ -76,11 +75,6 @@ class MainActivity : AppCompatActivity() {
 //        standardBottomSheetBehavior.saveFlags = BottomSheetBehavior.SAVE_ALL
 //        binding.textView.setTextColor(textColor)
 //    }
-
-    private fun showModalBottomSheet() {
-        val modalBottomSheet = ModalBottomSheet()
-        modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
-    }
 
 //    private fun animateStandardBottomSheetStates() {
 //        binding.standardBottomSheet.postDelayed({
