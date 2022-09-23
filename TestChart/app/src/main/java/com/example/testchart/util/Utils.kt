@@ -40,6 +40,7 @@ class Utils {
             return (Math.round(value * (10 * position)) / 10.0 * position).toFloat()
         }
 
+        // TODO: Pref에 저장하고 관리해야 됨 - 기기에 설정된 단위
         // 거리 단위
         fun getSettingUnit(): Byte {
             val locale = Locale.getDefault()
@@ -61,7 +62,6 @@ class Utils {
             }
         }
 
-        // 차트 세로 범위 계산
         fun getClubApex(clubCode: Int, unit: Int): Int {
             return if (clubCode < 0 || clubCode >= CLUB_NAME.size) 0 else {
                 if (unit > 3) {

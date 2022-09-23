@@ -152,30 +152,30 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
         protected void setTargetChart(StatsTargetDay stData) {
             binding.layoutTargetChart.setTargetDistance((int) stData.getTargetDistance());
 
-            byte bUnit = Utils.Companion.getSettingUnit();
-
-            if (stData.getTargetUnit() != null && stData.getTargetUnit().compareTo("meter") == 0) {
-                if (bUnit == 0) {
-                    bUnit = 3;
-                } else if (bUnit == 1) {
-                    bUnit = 2;
-                } else if (bUnit == 6) {
-                    bUnit = 4;
-                } else if (bUnit == 7) {
-                    bUnit = 5;
-                }
-            } else {
-                if (bUnit == 2) {
-                    bUnit = 1;
-                } else if (bUnit == 3) {
-                    bUnit = 0;
-                } else if (bUnit == 4) {
-                    bUnit = 6;
-                } else if (bUnit == 5) {
-                    bUnit = 7;
-                }
-            }
-            binding.layoutTargetChart.setUnit((short) bUnit);
+//            byte bUnit = Utils.Companion.getSettingUnit();
+//
+//            if (stData.getTargetUnit() != null && stData.getTargetUnit().compareTo("meter") == 0) {
+//                if (bUnit == 0) {
+//                    bUnit = 3;
+//                } else if (bUnit == 1) {
+//                    bUnit = 2;
+//                } else if (bUnit == 6) {
+//                    bUnit = 4;
+//                } else if (bUnit == 7) {
+//                    bUnit = 5;
+//                }
+//            } else {
+//                if (bUnit == 2) {
+//                    bUnit = 1;
+//                } else if (bUnit == 3) {
+//                    bUnit = 0;
+//                } else if (bUnit == 4) {
+//                    bUnit = 6;
+//                } else if (bUnit == 5) {
+//                    bUnit = 7;
+//                }
+//            }
+            binding.layoutTargetChart.setUnit(stData.getTargetUnit());
 
             ShotData lastShotdata = null;
             ArrayList<ShotData> listShotData = new ArrayList<>();
@@ -192,8 +192,9 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             }
 
-            Log.e("hjh", lastShotdata.toString() + listShotData.toString());
-            binding.layoutTargetChart.drawChart(lastShotdata, listShotData, false);
+            Log.e("hjh", "LastShotData : " + lastShotdata.toString() + "\n ListShotData : " + listShotData.toString());
+//            binding.layoutTargetChart.drawStatsChart(lastShotdata, listShotData, MSCTargetChart.Mode.STATS, stData.getTargetUnit(), (int) stData.getTargetDistance());
+            binding.layoutTargetChart.drawChart(lastShotdata, listShotData, MSCTargetChart.Mode.STATS);
         }
 
         private ShotData statsTargetInfo2ShotData(StatsTargetInfo sti) {

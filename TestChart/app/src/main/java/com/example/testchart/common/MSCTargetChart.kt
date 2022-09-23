@@ -1,110 +1,104 @@
-package com.example.testchart.common;
+package com.example.testchart.common
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
+import android.content.Context
+import android.util.AttributeSet
+import android.util.Log
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.testchart.R
+import com.example.testchart.data.MyYAxisValueFormatter
+import com.example.testchart.data.ShotData
+import com.example.testchart.util.ReverseRelativeLayout
+import com.example.testchart.util.SC300LIB
+import com.example.testchart.util.Utils.Companion.getClubApex
+import com.example.testchart.util.Utils.Companion.getSettingUnit
+import com.example.testchart.util.Utils.Companion.valueForUnit
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.listener.OnAnimationListener
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
+class MSCTargetChart : ConstraintLayout, OnAnimationListener {
+    enum class Mode (
+        val animation: Boolean,
+        val keepLine: Boolean
+            ) {
+        STATS(animation = false, keepLine = true),
+        TARGET(animation = true, keepLine = false)
+    }
 
-import com.example.testchart.R;
-import com.example.testchart.data.MyYAxisValueFormatter;
-import com.example.testchart.data.ShotData;
-import com.example.testchart.util.ReverseRelativeLayout;
-import com.example.testchart.util.SC300LIB;
-import com.example.testchart.util.Utils;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.OnAnimationListener;
+    val targetLabel = "TARGET"
 
-import java.util.ArrayList;
-import java.util.List;
+    private val TAG: String = this::class.java.simpleName
 
+    private val UNIT_DISTANCE = arrayOf("yd", "yd", "m", "m", "m", "m", "yd", "yd")
+    private val UNIT_APEX = arrayOf("ft", "ft", "ft", "ft", "m", "m", "m", "m")
+    private val DEFAULT_TARGET_CLUB_CODE = 11
+    private val DEFAULT_TARGET_DISTANCE = 15
+    private val DEFAULT_CHART_X = 100
 
-public class MSCTargetChart extends ConstraintLayout implements OnAnimationListener {
+    private val mLastTrajectory_t = DoubleArray(200) //시간
+    private val mLastTrajectory_y = DoubleArray(200) //수평거리
+    private val mLastTrajectory_z = DoubleArray(200) //높이
 
-    String[] UNIT_DISTANCE = new String[]{"yd", "yd", "m", "m", "m", "m", "yd", "yd"};
-    String[] UNIT_APEX = new String[]{"ft", "ft", "ft", "ft", "m", "m", "m", "m"};
-    Integer DEFAULT_TARGET_CLUB_CODE = 11;
-    Integer DEFAULT_TARGET_DISTANCE = 15;
-    public static final int[] CLUB_CARRY = {
-            240, 240, 210, 210, 210,
-            210, 210, 210, 180, 180,
-            180, 180, 180, 180, 170,
-            170, 150, 150, 150, 150,
-            140, 140};
-
-    LineChart lineChart;
-
-    private View mLayoutNoShot;
-
-    private LineDataSet mDataTarget;
-    private ArrayList<ILineDataSet> mDataSets = new ArrayList<>();
-    private double mdMaxHeight = 0;
-    private double mChartMax = 0;
-
-    private double[] mLastTrajectory_t = new double[200];//시간
-    private double[] mLastTrajectory_y = new double[200];//수평거리
-    private double[] mLastTrajectory_z = new double[200];//높이
+    private lateinit var lineChart: LineChart
+    private lateinit var mLayoutNoShot: View
+    private lateinit var mDataTarget: LineDataSet
+    private val mDataSets = ArrayList<ILineDataSet>()
+    private var mdMaxHeight = 0.0
 
     //  이 놈을 Res가 아닌 View로 그린 공으로 교체 해야됨.
-    private int[] mListGrayBall;
-    private int[] mListRedBall;
+    private lateinit var mListGrayBall: IntArray
+    private lateinit var mListRedBall: IntArray
+    private var mLastShotData: ShotData? = null
+    private var mShotDataList: ArrayList<ShotData>? = null
 
-    private ShotData mLastShotData;
-    private ArrayList<ShotData> mShotDataList;
-
-    public MSCTargetChart(@NonNull Context context) {
-        super(context);
-        init(context);
+    constructor(context: Context) : super(context) {
+        init(context)
     }
 
-    public MSCTargetChart(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        init(context)
     }
 
-    public MSCTargetChart(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        init(context)
     }
 
-    protected void init(Context context) {
-        View view = View.inflate(context, R.layout.msc_target_chart, this);
-        mLayoutNoShot = view.findViewById(R.id.layoutNohaveShot);
-        ReverseRelativeLayout reverseRelativeLayout = view.findViewById(R.id.layoutTargetReverse);
-        reverseRelativeLayout.setReverse(true);
-        lineChart = view.findViewById(R.id.targetLineChart);
-
-        initChart();
-
-        setTargetDistance(DEFAULT_TARGET_DISTANCE);
+    protected fun init(context: Context?) {
+        val view = inflate(context, R.layout.msc_target_chart, this)
+        mLayoutNoShot = view.findViewById(R.id.layoutNohaveShot)
+        val reverseRelativeLayout =
+            view.findViewById<ReverseRelativeLayout>(R.id.layoutTargetReverse)
+        reverseRelativeLayout.setReverse(true)
+        lineChart = view.findViewById(R.id.targetLineChart)
+        initChart()
+        setTargetDistance(DEFAULT_TARGET_DISTANCE)
     }
 
-    protected void initChart() {
-        lineChart.setMinOffset(20f);
-        lineChart.setNoDataText("");
+    protected fun initChart() {
+        lineChart.minOffset = 20f
+        lineChart.setNoDataText("")
         //mLineChart.setOnDrawListener(this);
-        lineChart.setOnAnimationListener(this);
-        lineChart.getDescription().setEnabled(false);
-
-        lineChart.getAxisLeft().setEnabled(true);
-        lineChart.getRendererLeftYAxis().setDrawReverse(true);
-        lineChart.getRendererLeftYAxis().setUnit(UNIT_APEX[Utils.Companion.getSettingUnit()]);
-        lineChart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
-        lineChart.getAxisLeft().setValueFormatter(new MyYAxisValueFormatter());
-        lineChart.getRendererXAxis().setUnit(UNIT_DISTANCE[Utils.Companion.getSettingUnit()]);
-        lineChart.getAxisRight().setEnabled(false);
-        lineChart.getLegend().setEnabled(false);
-        lineChart.setTouchEnabled(false);
+        lineChart.onAnimationListener = this
+        lineChart.description.isEnabled = false
+        lineChart.axisLeft.isEnabled = true
+        lineChart.rendererLeftYAxis.setDrawReverse(true)
+        lineChart.rendererLeftYAxis.setUnit(UNIT_APEX[getSettingUnit().toInt()])
+        lineChart.axisLeft.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
+        lineChart.axisLeft.valueFormatter = MyYAxisValueFormatter()
+        lineChart.rendererXAxis.setUnit(UNIT_DISTANCE[getSettingUnit().toInt()])
+        lineChart.axisRight.isEnabled = false
+        lineChart.legend.isEnabled = false
+        lineChart.setTouchEnabled(false)
 
         //  이걸 왜 그리지 초기화할 때??
 //        List<Entry> entries = new ArrayList<>();
@@ -112,174 +106,205 @@ public class MSCTargetChart extends ConstraintLayout implements OnAnimationListe
 //        LineDataSet lineDataSet = new LineDataSet(entries, "");
 //        lineDataSet.setDrawCircles(false);
 //        lineChart.setData(new LineData(lineDataSet));
-        lineChart.getAxisLeft().setAxisMinimum(0);
-        int clubCode = DEFAULT_TARGET_CLUB_CODE;
-        int nMaxApex = Utils.Companion.getClubApex(clubCode, Utils.Companion.getSettingUnit());
-        lineChart.getAxisLeft().setAxisMaximum(nMaxApex);
-        float maxDistance = (float) DEFAULT_TARGET_DISTANCE * 1.3f;
-        lineChart.getXAxis().setAxisMaximum(maxDistance);
-        lineChart.getXAxis().setDrawGridLines(false);
-        lineChart.invalidate();
+        lineChart.axisLeft.axisMinimum = 0f
+        val clubCode = DEFAULT_TARGET_CLUB_CODE
+        val nMaxApex = getClubApex(clubCode, getSettingUnit().toInt())
+        lineChart.axisLeft.axisMaximum = nMaxApex.toFloat()
+        val maxDistance = DEFAULT_TARGET_DISTANCE.toFloat() * 1.3f
+        lineChart.xAxis.axisMaximum = maxDistance
+        lineChart.xAxis.setDrawGridLines(false)
+        lineChart.invalidate()
+        mListGrayBall = IntArray(10)
+        mListGrayBall[0] = R.drawable.gray_01
+        mListRedBall = IntArray(10)
+        mListRedBall[0] = R.drawable.red_01
 
-        mListGrayBall = new int[10];
-        mListGrayBall[0] = R.drawable.gray_01;
-
-        mListRedBall = new int[10];
-        mListRedBall[0] = R.drawable.red_01;
+        lineChart.axisLeft.setLabelCount(4, true)
+        lineChart.axisLeft.textColor = resources.getColor(R.color.main_graph_axis_y)
+        lineChart.isDoubleTapToZoomEnabled = false
+        lineChart.isDragEnabled = false
+        lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        lineChart.xAxis.labelRotationAngle = -180f
+        lineChart.xAxis.textColor = resources.getColor(R.color.main_graph_axis_y)
     }
 
-    public void drawChart(ShotData lastShotData, ArrayList<ShotData> dataSets, boolean animation) {
-        mLastShotData = lastShotData;
-        mShotDataList = dataSets;
-        drawChart(animation);
+    fun drawChart(lastShotData: ShotData?, dataSets: ArrayList<ShotData>?, mode: Mode) {
+        mLastShotData = lastShotData
+        mShotDataList = dataSets
+        drawChart(mode)
     }
 
-    public void drawChart(boolean animation) {
-        setShotList(animation);
+    fun drawStatsChart(lastShotData: ShotData?, dataSets: ArrayList<ShotData>?, mode: Mode, unit: String, target: Int) {
+        Log.e(TAG, lastShotData.toString() + dataSets.toString())
+        mLastShotData = lastShotData
+        mShotDataList = dataSets
+        setTargetDistance(target)
+        setUnit(unit)
+        drawChart(mode)
+    }
+
+    private fun drawChart(mode: Mode) {
+        setShotList(mode.animation) // return mDataSets(차트에 그릴 공, 라인)
+        // TODO: 단위 설정, 타겟 설정 추가하고 사용처에서 단위,타겟 설정 실행
 
         // 데이터 없을 때 보여줄 view
-        if (mDataSets.size() == 0) mLayoutNoShot.setVisibility(VISIBLE);
-        else mLayoutNoShot.setVisibility(GONE);
+        mLayoutNoShot.visibility = if (mDataSets.size == 0) VISIBLE else GONE
 
-        LineData lineData = new LineData();
-
-        lineData.addDataSet(mDataTarget);
-        lineData.setHighlightEnabled(false);
-        if (mDataSets.size() > 0) {
-            for (ILineDataSet dataset : mDataSets) {
-                lineData.addDataSet(dataset);
+        val lineData = LineData()
+        lineData.addDataSet(mDataTarget)
+        lineData.isHighlightEnabled = false
+        // TODO: setShotList()함수 내부에서 아래 처리, mDataSets 전역변수 -> 지역변수
+        if (mDataSets.size > 0) {
+            for (dataset in mDataSets) {
+                lineData.addDataSet(dataset)
             }
         } else {
-            List<Entry> entries = new ArrayList<>();
-            entries.add(new Entry((float) 1, 0));
-            LineDataSet lineDataSet = new LineDataSet(entries, "");
-            lineDataSet.setDrawCircles(false);
-            lineDataSet.setDrawValues(false);
-            lineData.addDataSet(lineDataSet);
+            val entries: MutableList<Entry> = ArrayList()
+            entries.add(Entry(1f, 0f))
+            val lineDataSet = LineDataSet(entries, "")
+            lineDataSet.setDrawCircles(false)
+            lineDataSet.setDrawValues(false)
+            lineData.addDataSet(lineDataSet)
         }
-        lineChart.setData(lineData);
-
-        ///////////////////////////////////
-        if (lineChart.getXChartMax() > mChartMax) mChartMax = lineChart.getXChartMax();
-        int clubcode = DEFAULT_TARGET_CLUB_CODE;
-        if (mChartMax < CLUB_CARRY[clubcode]) {
-            mChartMax = CLUB_CARRY[clubcode];
-        }
+        // TODO: 타겟 교체하기 테스트 해봐야됨
+//        lineChart.data = lineData
+//        lineChart.data.getDataSetByLabel(targetLabel, false)
+//        val int = lineChart.data.getIndexOfDataSet(lineChart.data.getDataSetByLabel(targetLabel, false))
+//        lineChart.data.dataSets.removeAt(int)
+//        lineChart.data.dataSets.add() //타겟 넣기
 
 
-        if (mdMaxHeight > lineChart.getAxisLeft().getAxisMaximum()) {
-            lineChart.getAxisLeft().setAxisMaximum((float) (mdMaxHeight));
-        }
-
-        //  차트에 그릴 값에 따라 차트 범위 설정
-//        if (mShotDataList != null) {
-//            ArrayList<Float> arr = new ArrayList<Float>();
-////            float maxValue = mShotDataList.
-//            for (int i = 0; i < mShotDataList.size(); i++) {
-//                arr.add(mShotDataList.get(i).getTotal());
-//            }
+//        if (lineChart.xChartMax > mChartMax) mChartMax = lineChart.xChartMax.toDouble()
+//        val clubCode = DEFAULT_TARGET_CLUB_CODE
+//        if (mChartMax < CLUB_CARRY[clubCode]) {
+//            mChartMax = CLUB_CARRY[clubCode].toDouble()
 //        }
-        if (mLastShotData != null && mLastShotData.getTotal() > lineChart.getXAxis().getAxisMaximum()) {
-            lineChart.getXAxis().setAxisMaximum(mLastShotData.getTotal() * 1.3f);
+        if (mdMaxHeight > lineChart.axisLeft.axisMaximum) {
+            lineChart.axisLeft.axisMaximum = mdMaxHeight.toFloat()
         }
 
-        lineChart.getAxisLeft().setLabelCount(4, true);
-        lineChart.getAxisLeft().setTextColor(getResources().getColor(R.color.main_graph_axis_y));
+        //  차트에 그릴 값에 따라 차트 범위 설정 (가로)
+        mShotDataList?.let { data ->
+            val maxDataTotal = data.maxOfOrNull {
+                it.total
+            } ?: 0f
+            if (maxDataTotal > lineChart.xAxis.axisMaximum) {
+                lineChart.xAxis.axisMaximum = maxDataTotal * 1.3f
+            }
+        }
 
-        lineChart.setDoubleTapToZoomEnabled(false);
-        lineChart.setDragEnabled(false);
-        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getXAxis().setLabelRotationAngle(-180);
-        lineChart.getXAxis().setTextColor(getResources().getColor(R.color.main_graph_axis_y));
+        mLastShotData?.let {
+            val maxShotTotal = mLastShotData?.total ?: 0f
+            if (maxShotTotal > lineChart.xAxis.axisMaximum) {
+                lineChart.xAxis.axisMaximum = maxShotTotal * 1.3f
+            }
+        }
 
-        if (animation) lineChart.animateX(2000);
+//        lineChart.axisLeft.setLabelCount(4, true)
+//        lineChart.axisLeft.textColor = resources.getColor(R.color.main_graph_axis_y)
+//        lineChart.isDoubleTapToZoomEnabled = false
+//        lineChart.isDragEnabled = false
+//        lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+//        lineChart.xAxis.labelRotationAngle = -180f
+//        lineChart.xAxis.textColor = resources.getColor(R.color.main_graph_axis_y)
+        if (mode.animation) lineChart.animateX(2000)
 
-        //if (!mbEnable) return;
-        ///////////////////////////////////
-
-        lineChart.postInvalidate();
+        lineChart.postInvalidate()
     }
 
     // 단위 설정
-    public void setUnit(Short unit) {
-        lineChart.getRendererLeftYAxis().setUnit(UNIT_APEX[unit]);
-        lineChart.getRendererXAxis().setUnit(UNIT_DISTANCE[unit]);
-
-        int clubCode = DEFAULT_TARGET_CLUB_CODE;
-        int nMaxApex = Utils.Companion.getClubApex(clubCode, Utils.Companion.getSettingUnit());
-        lineChart.getAxisLeft().setAxisMaximum(nMaxApex);
-        float maxDistance = (float) DEFAULT_TARGET_DISTANCE * 1.3f;
-        if (maxDistance > lineChart.getXAxis().getAxisMaximum()) {
-            lineChart.getXAxis().setAxisMaximum(maxDistance);
+    fun setUnit(unit: String?) {
+        var bUnit = getSettingUnit()
+        if (unit != null && unit == "meter") {
+            if (bUnit.toInt() == 0) {
+                bUnit = 3
+            } else if (bUnit.toInt() == 1) {
+                bUnit = 2
+            } else if (bUnit.toInt() == 6) {
+                bUnit = 4
+            } else if (bUnit.toInt() == 7) {
+                bUnit = 5
+            }
+        } else {
+            if (bUnit.toInt() == 2) {
+                bUnit = 1
+            } else if (bUnit.toInt() == 3) {
+                bUnit = 0
+            } else if (bUnit.toInt() == 4) {
+                bUnit = 6
+            } else if (bUnit.toInt() == 5) {
+                bUnit = 7
+            }
         }
-        lineChart.invalidate();
-
-        drawChart(false);
+        lineChart.rendererLeftYAxis.setUnit(UNIT_APEX[bUnit.toInt()])
+        lineChart.rendererXAxis.setUnit(UNIT_DISTANCE[bUnit.toInt()])
+        val clubCode = DEFAULT_TARGET_CLUB_CODE
+        val nMaxApex = getClubApex(clubCode, getSettingUnit().toInt())
+        lineChart.axisLeft.axisMaximum = nMaxApex.toFloat()
+        val maxDistance = DEFAULT_TARGET_DISTANCE.toFloat() * 1.3f
+        if (maxDistance > lineChart.xAxis.axisMaximum) {
+            lineChart.xAxis.axisMaximum = maxDistance
+        }
+        lineChart.invalidate()
+        drawChart(Mode.STATS)
     }
 
     // 타겟 거리 설정 - 타겟 이미지 표시, 그래프 범위 변경
-    public void setTargetDistance(Integer integer) {
-        ArrayList<Entry> entries = new ArrayList<>();
-        Drawable drawableflag = getResources().getDrawable(R.drawable.target_img_flag_left);
+    fun setTargetDistance(integer: Int) {
+        val entries = ArrayList<Entry>()
+        val drawableflag = resources.getDrawable(R.drawable.target_img_flag_left)
         //Drawable drawableflag = getResources().getDrawable(R.drawable.graph_icon_target);
+        val ypos = 0f
+        val entryFlag = Entry(
+            integer.toFloat(), ypos, drawableflag
+        )
+        entries.add(entryFlag)
+        mDataTarget = LineDataSet(entries, targetLabel)
+        mDataTarget.lineWidth = 0f
+        mDataTarget.setDrawIcons(true)
+        mDataTarget.setDrawCircles(false)
+        mDataTarget.setDrawValues(false)
 
-        float ypos = 0;
-        Entry entryFlag = new Entry(integer, ypos, drawableflag);
-        entries.add(entryFlag);
-
-        mDataTarget = new LineDataSet(entries, "TARGET");
-        mDataTarget.setLineWidth(0);
-        mDataTarget.setDrawIcons(true);
-        mDataTarget.setDrawCircles(false);
-        mDataTarget.setDrawValues(false);
-
-        int clubCode = DEFAULT_TARGET_CLUB_CODE;
-        int nMaxApex = Utils.Companion.getClubApex(clubCode, Utils.Companion.getSettingUnit());
-        lineChart.getAxisLeft().setAxisMaximum(nMaxApex);
-        float maxDistance = (float) integer * 1.3f;
-        lineChart.getXAxis().setAxisMaximum(maxDistance);
-        lineChart.setVisibleXRangeMaximum(maxDistance);
-        lineChart.invalidate();
-
-        drawChart(false);
+        // TODO: 가로 세로 max 시점 정리해야함. unit, target, draw 다함
+        val clubCode = DEFAULT_TARGET_CLUB_CODE
+        val nMaxApex = getClubApex(clubCode, getSettingUnit().toInt())
+        lineChart.axisLeft.axisMaximum = nMaxApex.toFloat()
+        lineChart.xAxis.axisMaximum = DEFAULT_CHART_X * 1.3f
+        lineChart.setVisibleXRangeMaximum(DEFAULT_CHART_X * 1.3f)
+        lineChart.invalidate()
+        drawChart(Mode.STATS)
     }
 
-
-    public float px2dp(float px) {
-        float density = getContext().getResources().getDisplayMetrics().density;
-        if (density == 1.0) density *= 4.0;
-        else if (density == 1.5) density *= (8 / 3);
-        else if (density == 2.0) density *= 2.0;
-
-        return px / density;
+    fun px2dp(px: Float): Float {
+        var density = context.resources.displayMetrics.density
+        if (density.toDouble() == 1.0) density *= 4.0.toFloat() else if (density.toDouble() == 1.5) density *= (8 / 3).toFloat() else if (density.toDouble() == 2.0) density *= 2.0.toFloat()
+        return px / density
     }
 
-    protected void setShotList(boolean animation) {
-        mDataSets.clear();
-
-        int color = R.color.chart_carry_max;
-//        if (mLastShotData != null) {
+    //  차트의 라인, 공
+    protected fun setShotList(animation: Boolean) {
+        mDataSets.clear()
+        val color = R.color.chart_carry_max
+        //        if (mLastShotData != null) {
 //            LineDataSet lds = createLineDataSet(getTrajectoryList(mLastShotData), "LAST", color);
 //            mDataSets.add(lds);
 //        }
         if (mShotDataList != null) {
-            for (int i = 0; i < mShotDataList.size(); i++) {
-                LineDataSet lds1 = createLineDataSet(getTrajectoryList(mShotDataList.get(i)), "LAST", color);
-                mDataSets.add(lds1);
+            for (i in mShotDataList!!.indices) {
+                val lds1 = createLineDataSet(getTrajectoryList(mShotDataList!![i]), "LAST", color)
+                mDataSets.add(lds1)
             }
         }
-
-        if (mShotDataList == null) mShotDataList = new ArrayList<>();
+        if (mShotDataList == null) mShotDataList = ArrayList()
 
         //  샷 데이터리스트가 10보다 작을 때
-        for (int i = 0; i < mShotDataList.size() && i < 10; i++) {
-            if (animation && i == mShotDataList.size() - 1) break;
-            ShotData data = mShotDataList.get(i);
-
-            ArrayList<Entry> entries = new ArrayList<>();
-
-            String unit = UNIT_DISTANCE[Utils.Companion.getSettingUnit()];
-            float distance = Utils.Companion.valueForUnit(data.getCarry(), unit);
+        var i = 0
+        while (i < mShotDataList!!.size && i < 10) {
+            if (animation && i == mShotDataList!!.size - 1) break
+            val data = mShotDataList!![i]
+            val entries = ArrayList<Entry>()
+            val unit = UNIT_DISTANCE[getSettingUnit().toInt()]
+            val distance = valueForUnit(data.carry, unit)
 
             //  마지막 샷이면
 //            if(i == mShotDataList.size()-1){
@@ -287,74 +312,93 @@ public class MSCTargetChart extends ConstraintLayout implements OnAnimationListe
 //            } else {
 //                entries.add(new Entry(distance, 0, getResources().getDrawable(mListGrayBall[i])));
 //            }
-            //  볼 이미지 그리기
-            entries.add(new Entry(distance, 0, getResources().getDrawable(mListGrayBall[0])));
 
-            LineDataSet lds = new LineDataSet(entries, String.format("C%d", i));
-            lds.setLineWidth(0);
-            lds.setDrawIcons(true);
-            lds.setDrawCircles(true);
-            lds.setDrawValues(false);
-            mDataSets.add(lds);
+            //  볼 이미지 그리기
+            entries.add(
+                Entry(
+                    distance, 0F, resources.getDrawable(
+                        mListGrayBall[0]
+                    )
+                )
+            )
+            val lds = LineDataSet(entries, String.format("C%d", i))
+            lds.lineWidth = 0f
+            lds.setDrawIcons(true)
+            lds.setDrawCircles(true)
+            lds.setDrawValues(false)
+            mDataSets.add(lds)
+            i++
         }
     }
 
     // 라인 그리기
-    private LineDataSet createLineDataSet(List<Entry> list, String label, int id) {
-        LineDataSet dataSet = new LineDataSet(list, label);
-        dataSet.setLineWidth(1.5f); // 선 두께
-        dataSet.setDrawCircles(false);
-        dataSet.setDrawValues(false);
-        dataSet.setColor(getResources().getColor(id));
-//        dataSet.setDrawIcons(true);
+    private fun createLineDataSet(list: List<Entry>, label: String, id: Int): LineDataSet {
+        val dataSet = LineDataSet(list, label)
+        dataSet.lineWidth = 1.5f // 선 두께
+        dataSet.setDrawCircles(false)
+        dataSet.setDrawValues(false)
+        dataSet.color = resources.getColor(id)
+        //        dataSet.setDrawIcons(true);
 //        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-
-        return dataSet;
+        return dataSet
     }
 
-    private List<Entry> getTrajectoryList(ShotData shotData) {
-        List<Entry> entryList = new ArrayList<>();
-        SC300LIB sc300lib = new SC300LIB();
-
-        int zmax_index = sc300lib.sc300_get_trajectory(shotData.getBall_speed(),
-                (shotData.getLaunch_angle() > 100 ? shotData.getLaunch_angle() - 100 : shotData.getLaunch_angle()),
-                (int) shotData.getSpin_rate(), (int) shotData.getTemperature(), (int) shotData.getAir_pressure(),
-                shotData.getCarry(), (shotData.getApex() > 100 ? shotData.getApex() - 100 : shotData.getApex()),
-                mLastTrajectory_t, mLastTrajectory_y, mLastTrajectory_z);
-
-        float yFactor = getMeterYardFactor();
-        float zFactor = getMeterFeetFactor();
-
+    private fun getTrajectoryList(shotData: ShotData): List<Entry> {
+        val entryList: MutableList<Entry> = ArrayList()
+        val sc300lib = SC300LIB()
+        val zmax_index = sc300lib.sc300_get_trajectory(
+            shotData.ball_speed.toDouble(),
+            (if (shotData.launch_angle > 100) shotData.launch_angle - 100 else shotData.launch_angle).toDouble(),
+            shotData.spin_rate.toInt(),
+            shotData.temperature.toInt(),
+            shotData.air_pressure.toInt(),
+            shotData.carry.toDouble(),
+            (if (shotData.apex > 100) shotData.apex - 100 else shotData.apex).toDouble(),
+            mLastTrajectory_t,
+            mLastTrajectory_y,
+            mLastTrajectory_z
+        )
+        val yFactor = meterYardFactor
+        val zFactor = meterFeetFactor
         if (!(zmax_index <= 0 || zmax_index >= 200)) {
-            for (int i = 0; i < 200; i++) {
-                mLastTrajectory_y[i] *= yFactor;
-                mLastTrajectory_z[i] *= zFactor;
-//                Log.d("hjh", "i : " + i + ", y : " + (float) mLastTrajectory_y[i] + ", z : " + (float) mLastTrajectory_z[i]);
-                entryList.add(new Entry((float) mLastTrajectory_y[i], (float) mLastTrajectory_z[i]));
-                if (mdMaxHeight < mLastTrajectory_z[i]) mdMaxHeight = mLastTrajectory_z[i];
+            for (i in 0..199) {
+                mLastTrajectory_y[i] = mLastTrajectory_y[i] * yFactor
+                mLastTrajectory_z[i] = mLastTrajectory_z[i] * zFactor
+                //                Log.d("hjh", "i : " + i + ", y : " + (float) mLastTrajectory_y[i] + ", z : " + (float) mLastTrajectory_z[i]);
+                entryList.add(
+                    Entry(
+                        mLastTrajectory_y[i].toFloat(), mLastTrajectory_z[i].toFloat()
+                    )
+                )
+                if (mdMaxHeight < mLastTrajectory_z[i]) mdMaxHeight = mLastTrajectory_z[i]
             }
         }
-        return entryList;
+        return entryList
     }
 
-    public Float getMeterYardFactor() {
-        return UNIT_DISTANCE[Utils.Companion.getSettingUnit()].equals("yd") ? 1.09361f : 1.0f;
+    val meterYardFactor: Float
+        get() = if (UNIT_DISTANCE[getSettingUnit().toInt()] == "yd") 1.09361f else 1.0f
+    val meterFeetFactor: Float
+        get() = if (UNIT_APEX[getSettingUnit().toInt()] == "ft") 3.28084f else 1.0f
+
+    override fun onAnimationStart() {
+        super.onAnimationStart()
     }
 
-    public float getMeterFeetFactor() {
-        return UNIT_APEX[Utils.Companion.getSettingUnit()].equals("ft") ? 3.28084f : 1.0f;
-    }
-
-    @Override
-    public void onAnimationStart() {
-        super.onAnimationStart();
-    }
-
-    @Override
-    public void onAnimationEnd() {
-        super.onAnimationEnd();
+    override fun onAnimationEnd() {
+        super.onAnimationEnd()
         //  TTS
 //        GlobalViewModel.getInstance().getPlaySoundPoolSfxAction().postValue(MainActivity.SoundType.RECEIVE_READY.ordinal());
-        drawChart(false);
+//        drawChart(Mode.STATS)
+    }
+
+    companion object {
+        val CLUB_CARRY = intArrayOf(
+            240, 240, 210, 210, 210,
+            210, 210, 210, 180, 180,
+            180, 180, 180, 180, 170,
+            170, 150, 150, 150, 150,
+            140, 140
+        )
     }
 }
