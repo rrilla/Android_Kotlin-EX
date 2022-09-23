@@ -1,6 +1,7 @@
 package com.example.testchart.common;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    public enum ORDER_TARGET{
+public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public enum ORDER_TARGET {
         DISTANCE_ASC,
         DISTANCE_DESC,
         SCORE_ASC,
@@ -32,11 +33,11 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
     protected List<StatsTargetDay> datalist;
     protected ORDER_TARGET orderTarget;
 
-    public StatsByTargetAdapter(){
+    public StatsByTargetAdapter() {
         orderTarget = ORDER_TARGET.DISTANCE_ASC;
     }
 
-    public void setOnItemClickListener(ItemClickListener listener){
+    public void setOnItemClickListener(ItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -50,7 +51,7 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof ItemViewHolder) {
-            if(datalist != null) {
+            if (datalist != null) {
                 ((ItemViewHolder) viewHolder).bind(datalist.get(i));
                 ((ItemViewHolder) viewHolder).setOnItemClickListener(listener);
             }
@@ -59,44 +60,47 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        if(datalist == null) return 0;
+        if (datalist == null) return 0;
         return datalist.size();
     }
 
-    public void setList(List<StatsTargetDay> list){
+    public void setList(List<StatsTargetDay> list) {
         datalist = list;
         sortList();
         notifyDataSetChanged();
     }
 
-    public void setOrderTarget(ORDER_TARGET order){
+    public void setOrderTarget(ORDER_TARGET order) {
         orderTarget = order;
         sortList();
         notifyDataSetChanged();
     }
 
-    protected void sortList(){
-        if(datalist == null) return;
+    protected void sortList() {
+        if (datalist == null) return;
 
         Collections.sort(datalist, new Comparator<StatsTargetDay>() {
             @Override
             public int compare(StatsTargetDay o1, StatsTargetDay o2) {
-                switch (orderTarget){
+                switch (orderTarget) {
                     case DISTANCE_ASC:
-                        if(o1.getTargetDistanceToMeter() > o2.getTargetDistanceToMeter()) return 1;
-                        else if(o1.getTargetDistanceToMeter() == o2.getTargetDistanceToMeter()) return 0;
+                        if (o1.getTargetDistanceToMeter() > o2.getTargetDistanceToMeter()) return 1;
+                        else if (o1.getTargetDistanceToMeter() == o2.getTargetDistanceToMeter())
+                            return 0;
                         else return -1;
                     case DISTANCE_DESC:
-                        if(o1.getTargetDistanceToMeter() > o2.getTargetDistanceToMeter()) return -1;
-                        else if(o1.getTargetDistanceToMeter() == o2.getTargetDistanceToMeter()) return 0;
+                        if (o1.getTargetDistanceToMeter() > o2.getTargetDistanceToMeter())
+                            return -1;
+                        else if (o1.getTargetDistanceToMeter() == o2.getTargetDistanceToMeter())
+                            return 0;
                         else return 1;
                     case SCORE_ASC:
-                        if(o1.getAverageScore() > o2.getAverageScore()) return 1;
-                        else if(o1.getAverageScore() == o2.getAverageScore()) return 0;
+                        if (o1.getAverageScore() > o2.getAverageScore()) return 1;
+                        else if (o1.getAverageScore() == o2.getAverageScore()) return 0;
                         else return -1;
                     case SCORE_DESC:
-                        if(o1.getAverageScore() > o2.getAverageScore()) return -1;
-                        else if(o1.getAverageScore() == o2.getAverageScore()) return 0;
+                        if (o1.getAverageScore() > o2.getAverageScore()) return -1;
+                        else if (o1.getAverageScore() == o2.getAverageScore()) return 0;
                         else return 1;
                 }
                 return 0;
@@ -120,7 +124,8 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
             binding.layoutBG.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(listener!=null) listener.onClick(stData.getTargetDistance(), stData.getTargetUnit());
+                    if (listener != null)
+                        listener.onClick(stData.getTargetDistance(), stData.getTargetUnit());
                 }
             });
 
@@ -128,6 +133,7 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
             setTextDistanceUnit(stData.getTargetUnit());
             binding.tvScore.setText(String.format("%.01f", Utils.Companion.floatRoundPosition(stData.getAverageScore(), 1)));
 //            setShotData(stData.getStats(), stData.getTargetUnit());
+//            Log.e("hjh", stData.toString());
             setTargetChart(stData);
 
         }
@@ -143,53 +149,54 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
         // 6: yard / mph / m
         // 7: yard / m/s / m
 
-        protected void setTargetChart(StatsTargetDay stData){
-            binding.layoutTargetChart.setTargetDistance((int)stData.getTargetDistance());
+        protected void setTargetChart(StatsTargetDay stData) {
+            binding.layoutTargetChart.setTargetDistance((int) stData.getTargetDistance());
 
             byte bUnit = Utils.Companion.getSettingUnit();
 
-            if(stData.getTargetUnit() != null && stData.getTargetUnit().compareTo("meter")==0){
-                if(bUnit == 0){
+            if (stData.getTargetUnit() != null && stData.getTargetUnit().compareTo("meter") == 0) {
+                if (bUnit == 0) {
                     bUnit = 3;
-                }else if(bUnit == 1){
+                } else if (bUnit == 1) {
                     bUnit = 2;
-                }else if(bUnit == 6){
+                } else if (bUnit == 6) {
                     bUnit = 4;
-                }else if(bUnit == 7){
+                } else if (bUnit == 7) {
                     bUnit = 5;
                 }
-            }else{
-                if(bUnit == 2){
+            } else {
+                if (bUnit == 2) {
                     bUnit = 1;
-                }else if(bUnit == 3){
+                } else if (bUnit == 3) {
                     bUnit = 0;
-                }else if(bUnit == 4){
+                } else if (bUnit == 4) {
                     bUnit = 6;
-                }else if(bUnit == 5){
+                } else if (bUnit == 5) {
                     bUnit = 7;
                 }
             }
-            binding.layoutTargetChart.setUnit((short)bUnit);
+            binding.layoutTargetChart.setUnit((short) bUnit);
 
             ShotData lastShotdata = null;
             ArrayList<ShotData> listShotData = new ArrayList<>();
 
-            if(stData.getStats().size() > 0) {
-                int lastIndex = stData.getStats().size()-1;
-                if(lastIndex > 2) lastIndex = 2;
+            if (stData.getStats().size() > 0) {
+                int lastIndex = stData.getStats().size() - 1;
+                if (lastIndex > 2) lastIndex = 2;
                 StatsTargetInfo sti = stData.getStats().get(lastIndex);
                 lastShotdata = statsTargetInfo2ShotData(sti);
 
-                for(int i=0; i<stData.getStats().size() && i<3; i++){
+                for (int i = 0; i < stData.getStats().size() && i < 3; i++) {
                     sti = stData.getStats().get(i);
                     listShotData.add(statsTargetInfo2ShotData(sti));
                 }
             }
 
-            binding.layoutTargetChart.drawChart(lastShotdata, listShotData,false);
+            Log.e("hjh", lastShotdata.toString() + listShotData.toString());
+            binding.layoutTargetChart.drawChart(lastShotdata, listShotData, false);
         }
 
-        private ShotData statsTargetInfo2ShotData(StatsTargetInfo sti){
+        private ShotData statsTargetInfo2ShotData(StatsTargetInfo sti) {
             ShotData sd = new ShotData();
             sd.setClub_code(sti.getClubCode());
             sd.setClub_nickname("");
@@ -249,16 +256,16 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
 //            return ct;
 //        }
 
-        protected void setTextDistanceUnit(String unit){
-            if(unit != null && (unit.compareTo("meter")==0 || unit.compareTo("m")==0)) {
+        protected void setTextDistanceUnit(String unit) {
+            if (unit != null && (unit.compareTo("meter") == 0 || unit.compareTo("m") == 0)) {
                 binding.tvDistanceUnit.setText("m");
-            }else{
+            } else {
                 binding.tvDistanceUnit.setText("yd");
             }
         }
 
-        protected void setDistance(float distance){
-            binding.tvDistance.setText(Integer.toString((int)distance));
+        protected void setDistance(float distance) {
+            binding.tvDistance.setText(Integer.toString((int) distance));
 
 //            if(distance > 150f){
 //                binding.layoutDistance.setBackground(context.getDrawable(R.drawable.bg_round_lipstick));
@@ -271,12 +278,12 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
 //            }
         }
 
-        public void setOnItemClickListener(ItemClickListener listener){
+        public void setOnItemClickListener(ItemClickListener listener) {
             this.listener = listener;
         }
     }
 
-    public interface ItemClickListener{
+    public interface ItemClickListener {
         void onClick(float targetDistance, String unit);
     }
 }
