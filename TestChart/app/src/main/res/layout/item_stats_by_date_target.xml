@@ -106,6 +106,13 @@
                 android:layout_marginStart="3dp"
                 android:text="scores"
                 android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/targetButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

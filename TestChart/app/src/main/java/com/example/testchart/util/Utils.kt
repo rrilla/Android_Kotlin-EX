@@ -51,6 +51,10 @@ class Utils {
             }
         }
 
+        fun getSettingTargetClubId() : Int {
+            return 11
+        }
+
         // 단위에 따른 값
         fun valueForUnit(value: Float, toUnit: String): Float {
             if (toUnit == null) return value

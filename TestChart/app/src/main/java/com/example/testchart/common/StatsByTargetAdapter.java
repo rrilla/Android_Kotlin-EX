@@ -129,6 +129,8 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             });
 
+            binding.targetButton.setOnClickListener(view ->binding.layoutTargetChart.targetTest(100));
+
             setDistance(stData.getTargetDistance());
             setTextDistanceUnit(stData.getTargetUnit());
             binding.tvScore.setText(String.format("%.01f", Utils.Companion.floatRoundPosition(stData.getAverageScore(), 1)));
@@ -150,7 +152,7 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
         // 7: yard / m/s / m
 
         protected void setTargetChart(StatsTargetDay stData) {
-            binding.layoutTargetChart.setTargetDistance((int) stData.getTargetDistance());
+//            binding.layoutTargetChart.setTargetDistance((int) stData.getTargetDistance());
 
 //            byte bUnit = Utils.Companion.getSettingUnit();
 //
@@ -175,26 +177,26 @@ public class StatsByTargetAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                    bUnit = 7;
 //                }
 //            }
-            binding.layoutTargetChart.setUnit(stData.getTargetUnit());
+//            binding.layoutTargetChart.setUnit(stData.getTargetUnit());
 
-            ShotData lastShotdata = null;
-            ArrayList<ShotData> listShotData = new ArrayList<>();
-
-            if (stData.getStats().size() > 0) {
-                int lastIndex = stData.getStats().size() - 1;
-                if (lastIndex > 2) lastIndex = 2;
-                StatsTargetInfo sti = stData.getStats().get(lastIndex);
-                lastShotdata = statsTargetInfo2ShotData(sti);
-
-                for (int i = 0; i < stData.getStats().size() && i < 3; i++) {
-                    sti = stData.getStats().get(i);
-                    listShotData.add(statsTargetInfo2ShotData(sti));
-                }
-            }
-
-            Log.e("hjh", "LastShotData : " + lastShotdata.toString() + "\n ListShotData : " + listShotData.toString());
+//            ShotData lastShotdata = null;
+//            ArrayList<ShotData> listShotData = new ArrayList<>();
+//
+//            if (stData.getStats().size() > 0) {
+//                int lastIndex = stData.getStats().size() - 1;
+//                if (lastIndex > 2) lastIndex = 2;
+//                StatsTargetInfo sti = stData.getStats().get(lastIndex);
+//                lastShotdata = statsTargetInfo2ShotData(sti);
+//
+//                for (int i = 0; i < stData.getStats().size() && i < 3; i++) {
+//                    sti = stData.getStats().get(i);
+//                    listShotData.add(statsTargetInfo2ShotData(sti));
+//                }
+//            }
+//
+//            Log.e("hjh", "LastShotData : " + lastShotdata.toString() + "\n ListShotData : " + listShotData.toString());
 //            binding.layoutTargetChart.drawStatsChart(lastShotdata, listShotData, MSCTargetChart.Mode.STATS, stData.getTargetUnit(), (int) stData.getTargetDistance());
-            binding.layoutTargetChart.drawChart(lastShotdata, listShotData, MSCTargetChart.Mode.STATS);
+            binding.layoutTargetChart.drawStatsChart(stData);
         }
 
         private ShotData statsTargetInfo2ShotData(StatsTargetInfo sti) {
