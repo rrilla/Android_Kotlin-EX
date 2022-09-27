@@ -1,5 +1,6 @@
 package com.github.mikephil.charting.data;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 /**
@@ -15,6 +16,9 @@ public abstract class BaseEntry {
 
     /** optional icon image */
     private Drawable mIcon = null;
+    private Boolean isBall = false;
+    private Bitmap ball = null;
+    private Float ballSize = 50f;
 
     public BaseEntry() {
 
@@ -65,6 +69,30 @@ public abstract class BaseEntry {
      */
     public Drawable getIcon() {
         return mIcon;
+    }
+
+    public Boolean isDrawBallEnabled() {
+        return isBall;
+    }
+
+    public void setDrawBallEnabled(Boolean enabled) {
+        this.isBall = enabled;
+    }
+
+    public void setBitmapBall(Bitmap bitmapBall) {
+        this.ball = bitmapBall;
+    }
+
+    public Bitmap getBitmapBall() {
+        return this.ball;
+    }
+
+    public Float getBallSize() {
+        return this.ballSize * 2;
+    }
+
+    public void setBallSize(Float ballSize) {
+        this.ballSize = ballSize;
     }
 
     /**

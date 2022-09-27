@@ -1,6 +1,9 @@
 package com.example.testchart.common
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -10,9 +13,7 @@ import com.example.testchart.data.MyYAxisValueFormatter
 import com.example.testchart.data.ShotData
 import com.example.testchart.data.StatsTargetDay
 import com.example.testchart.data.StatsTargetInfo
-import com.example.testchart.util.ReverseRelativeLayout
-import com.example.testchart.util.SC300LIB
-import com.example.testchart.util.Utils
+import com.example.testchart.util.*
 import com.example.testchart.util.Utils.Companion.getClubApex
 import com.example.testchart.util.Utils.Companion.getSettingUnit
 import com.example.testchart.util.Utils.Companion.valueForUnit
@@ -52,6 +53,7 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
     private val mLastTrajectory_z = DoubleArray(200) //높이
 
     private lateinit var lineChart: LineChart
+    private lateinit var ballView: BallCustomView
     private lateinit var mLayoutNoShot: View
     private lateinit var mDataTarget: LineDataSet
     private val mDataSets = ArrayList<ILineDataSet>()
@@ -79,13 +81,14 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
         init(context)
     }
 
-    private fun init(context: Context?) {
+    private fun init(context: Context) {
         val view = inflate(context, R.layout.msc_target_chart, this)
         mLayoutNoShot = view.findViewById(R.id.layoutNohaveShot)
         val reverseRelativeLayout =
             view.findViewById<ReverseRelativeLayout>(R.id.layoutTargetReverse)
         reverseRelativeLayout.setReverse(true)
         lineChart = view.findViewById(R.id.targetLineChart)
+        ballView = BallCustomView(context, null)
         initChart()
         setTargetDistance(DEFAULT_TARGET_DISTANCE)
     }
@@ -143,7 +146,7 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
             }
         }
         if (stData.averageScore == 4.1.toFloat()) {
-            Log.e("hjh 4.1", stData.targetDistance.toString())
+            Log.e("hjh!!", stData.targetDistance.toString())
         }
         setTargetDistance(stData.targetDistance)   // 타겟 설정
         setUnit(stData.targetUnit)   // 단위 설정
@@ -160,8 +163,10 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
             lineChart.data = LineData().apply {
                 isHighlightEnabled = false
                 addDataSet(mDataTarget)
+                Log.e("data!!", mDataTarget.toString())
                 for (dataset in mDataSets) {
-                    this.addDataSet(dataset)
+                    addDataSet(dataset)
+                    Log.e("data!!", dataset.toString())
                 }
             }
 
@@ -185,17 +190,23 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
                 }
             }
 
-            mLastShotData?.let {
-                val maxShotTotal = mLastShotData?.total ?: 0f
-                if (maxShotTotal > lineChart.xAxis.axisMaximum) {
-                    lineChart.xAxis.axisMaximum = maxShotTotal * 1.3f
-                }
-            }
+//            mLastShotData?.let {
+//                val maxShotTotal = mLastShotData?.total ?: 0f
+//                if (maxShotTotal > lineChart.xAxis.axisMaximum) {
+//                    lineChart.xAxis.axisMaximum = maxShotTotal * 1.3f
+//                }
+//            }
 
             if (mode.animation) lineChart.animateX(2000)
             lineChart.postInvalidate()
         }
     }
+
+//    fun addBall() {
+//        ballView.x =
+//        lineChart.addView(ballView)
+//    }
+
     fun targetTest(target: Int) {
         setTargetDistance(target)
         drawChart(Mode.STATS)
@@ -259,11 +270,18 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
         mDataTarget.setDrawIcons(true)
         mDataTarget.setDrawCircles(false)
         mDataTarget.setDrawValues(false)
+
+        val maxDistance: Float = distance.toFloat() * 1.3f
+        if (maxDistance > lineChart.xAxis.axisMaximum) {
+            lineChart.xAxis.axisMaximum = maxDistance
+            lineChart.setVisibleXRangeMaximum(maxDistance)
+        }
     }
 
     //  차트의 라인, 공
     private fun setShotList(mode: Mode) {
-        mDataSets.clear()
+//        mDataSets.clear()
+
         //        if (mLastShotData != null) {
 //            LineDataSet lds = createLineDataSet(getTrajectoryList(mLastShotData), lastLabel, color);
 //            mDataSets.add(lds);
@@ -280,25 +298,31 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
 
                         //  Ball
                         val distance = valueForUnit(mShotData.carry, UNIT_DISTANCE[getSettingUnit().toInt()])
+//                        lineChart.addView(
+//                            MyBall(lineChart.context).apply {
+//                                x = distance
+//                                y = 0f
+////                                Log.e("LineChart", "${lineChart.xAxis} \n ${lineChart.}")
+////                                scale = 0.1f
+//                            }
+//                            )
+                        val bitmap = getBallBitmap(Color.GREEN, "H1")
                         val entry = ArrayList<Entry>().apply {
                             add(Entry(
                                 distance, 0F, resources.getDrawable(
                                     mListGrayBall[0]
                                 )
-                            ))
+                            ).apply { isDrawBallEnabled = true
+                            bitmapBall = bitmap})
                         }
                         val lds2 = LineDataSet(entry, String.format("C%d", index)).apply {
-                            lineWidth = 0f
-//                            setDrawIcons(true)
-//                            setDrawCircles(true)
-//                            setDrawValues(false)
+                            setDrawIcons(true)
+                            setDrawCircles(true)
+                            setDrawValues(false)
                         }
-                        mDataSets.add(lds1)
-                        mDataSets.add(lds2)
+                        mDataSets.addAll(arrayOf(lds1,lds2))
+//                        mDataSets.add(lds1)
                         Log.e("hjh", "${distance} \n $entry \n $lds2")
-//                        if(mShotData.apex == 8.43.toFloat()) {
-//                            Log.e("hjh", )
-//                        }
                     }
                 }
             }
@@ -371,7 +395,7 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
             for (i in 0..199) {
                 mLastTrajectory_y[i] = mLastTrajectory_y[i] * yFactor
                 mLastTrajectory_z[i] = mLastTrajectory_z[i] * zFactor
-                //                Log.d("hjh", "i : " + i + ", y : " + (float) mLastTrajectory_y[i] + ", z : " + (float) mLastTrajectory_z[i]);
+                Log.e("hjh!!!", "${mLastTrajectory_y[i]} \n ${mLastTrajectory_z[i]}")
                 entryList.add(
                     Entry(
                         mLastTrajectory_y[i].toFloat(), mLastTrajectory_z[i].toFloat()
@@ -381,6 +405,23 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
             }
         }
         return entryList
+    }
+
+    private fun getBallBitmap(color: Int, text: String, size: Float = 50f) : Bitmap {
+        val view = MyBall(lineChart.context).apply {
+            ballColor = color
+            ballText = text
+        }
+//        val sideInversion = DisplayMetrics().apply {
+//            scaleX = -1f
+//        }
+//        val bitMap = Bitmap.createBitmap(sideInversion, size.toInt() * 4, size.toInt() * 4, Bitmap.Config.ARGB_8888)
+        val bitMap = Bitmap.createBitmap(size.toInt() * 4, size.toInt() * 4, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitMap)
+//            view.layout(view.left, view.top, view.measuredWidth, view.measuredHeight)
+//        view.measure(MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
+            view.draw(canvas)
+        return bitMap
     }
 
     private fun statsTargetInfo2ShotData(sti: StatsTargetInfo): ShotData {

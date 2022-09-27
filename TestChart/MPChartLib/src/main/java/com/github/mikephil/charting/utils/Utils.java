@@ -4,6 +4,7 @@ package com.github.mikephil.charting.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -548,6 +549,33 @@ public abstract class Utils {
         // translate to the correct position and draw
         canvas.translate(drawOffset.x, drawOffset.y);
         drawable.draw(canvas);
+        canvas.restoreToCount(saveId);
+    }
+
+    public static void drawBall(Canvas canvas,
+                                 Bitmap ball,
+                                 int x, int y,
+                                 float width, float height) {
+
+        MPPointF drawOffset = MPPointF.getInstance();
+        drawOffset.x = x - (width / 2);
+        drawOffset.y = y - (height / 2);
+
+//        drawable.copyBounds(mDrawableBoundsCache);
+//        drawable.setBounds(
+//                mDrawableBoundsCache.left,
+//                mDrawableBoundsCache.top,
+//                mDrawableBoundsCache.left + width,
+//                mDrawableBoundsCache.top + width);
+
+        int saveId = canvas.save();
+        // translate to the correct position and draw
+        canvas.translate(drawOffset.x, drawOffset.y);
+        canvas.drawBitmap(ball, mDrawableBoundsCache.left, mDrawableBoundsCache.top, new Paint());
+//        Paint paint = new Paint();
+//        paint.setColor(Color.RED);
+//        canvas.drawCircle(20f, 20f, 20f, paint);
+//        canvas.drawText("h1", 20f,20f,new Paint());
         canvas.restoreToCount(saveId);
     }
 

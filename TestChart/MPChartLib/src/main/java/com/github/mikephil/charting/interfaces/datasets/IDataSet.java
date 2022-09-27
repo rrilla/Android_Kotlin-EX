@@ -476,6 +476,9 @@ public interface IDataSet<T extends Entry> {
      */
     boolean isDrawIconsEnabled();
 
+//    void setDrawViews(boolean enabled);
+//    boolean isDrawViewEnabled();
+
     /**
      * Offset of icons drawn on the chart.
      *
