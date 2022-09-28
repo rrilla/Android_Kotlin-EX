@@ -4,9 +4,10 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.Log
 import android.view.View
 
-class MyBall: View {
+class MyBall : View {
     // 생성자
     constructor(context: Context?) : super(context)
 
@@ -40,7 +41,7 @@ class MyBall: View {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        // 배경을 초록색으로 채우기
+        // 배경
 //        canvas?.drawColor(Color.GREEN)
 
         // 공 배경(원)
@@ -55,17 +56,13 @@ class MyBall: View {
             textAlign = Paint.Align.CENTER
             textSize = size / 2
         }
+        val fontMetrics: Paint.FontMetrics = textPaint.fontMetrics
+        val fontHeight = fontMetrics.bottom - fontMetrics.top
 
         canvas.apply {
+            scale(-1f, 1f, (canvas.width / 4).toFloat(), (canvas.height / 4).toFloat())
             drawCircle(size, size, size / 2, paint)
-            drawText(ballText, size, size + size / 4, textPaint)
-
-            scaleX = -1f
+            drawText(ballText, size, size + fontHeight / 4, textPaint)
         }
     }
-
-//    override fun dispatchDraw(canvas: Canvas) {
-//        canvas.scale(-1f, 1f, (canvas.width / 2).toFloat(), (canvas.height / 2).toFloat())
-//        super.dispatchDraw(canvas)
-//    }
 }
