@@ -361,7 +361,7 @@ class MSCTargetChart : ConstraintLayout, OnAnimationListener {
     // 라인 그리기
     private fun createLineDataSet(list: List<Entry>, label: String, id: Int): LineDataSet {
         val dataSet = LineDataSet(list, label)
-        dataSet.lineWidth = 1.5f // 선 두께
+        dataSet.lineWidth = 0.5f // 선 두께
         dataSet.setDrawCircles(false)
         dataSet.setDrawValues(false)
         dataSet.color = resources.getColor(id)
