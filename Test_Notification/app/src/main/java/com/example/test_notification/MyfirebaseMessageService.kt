@@ -35,47 +35,10 @@ class MyfirebaseMessageService: FirebaseMessagingService() {
         super.onMessageReceived(message)
 
         Log.e(TAG, "fcm message : ${message.data}")
-        Log.e(TAG, "fcm notification : ${message.notification}")
+        Log.e(TAG, "fcm notification : channelId : ${message.notification?.channelId} \n body : ${message.notification?.body}")
 
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val builder: NotificationCompat.Builder
-        //  26버전 이상
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val channelId = "one-channel"
-            val channelName = "JaeHyeon`s Channel One"
-            val channel = NotificationChannel(
-                channelId,
-                channelName,
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                //  채널 설명
-                description = "JH`s Channel One Description"
-                //  홈 화면 뱃지 아이콘 출력 여부 - 미확인 알림갯수 표시
-                setShowBadge(true)
-                val uri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                val audioAttributes = AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .build()
-//                setSound(uri, audioAttributes)
-                //  진동 울림 여부
-                enableVibration(true)
-//                    //  진동 패턴
-//                    vibrationPattern = longArrayOf(100, 200, 300)
-//                    //  불빛 표시 여부
-//                    enableLights(true)
-//                    //  불빛 색상
-//                    lightColor = Color.RED
-            }
-            //  채널을 NotificationManager에 등록
-            manager.createNotificationChannel(channel)
-            //  채널을 이용하여 builder 생성
-            builder = NotificationCompat.Builder(this, channelId)
-
-            //  26버전 이하
-        } else{
-            builder = NotificationCompat.Builder(this)
-        }
+        val builder = getChannelBuilder(manager)
 
         builder.run {
             //  알림의 기본 정보
@@ -86,11 +49,9 @@ class MyfirebaseMessageService: FirebaseMessagingService() {
             setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_stat_ic_notification))
         }
 
-        //  원격 입력 설정
-        //  RemoteInput의 입력을 식별하는 값
-        val KEY_TEXT_REPLY = "key_text_reply"
-        //  입력 힌트
-        var replyLabel: String = "답장"
+        //  원격 입력 설정 - BroadcastReceiver 등록 필요.
+        val KEY_TEXT_REPLY = "key_text_reply"   //  RemoteInput의 입력을 식별하는 값
+        var replyLabel: String = "답장"  //  입력 힌트
         var remoteInput: RemoteInput = RemoteInput.Builder(KEY_TEXT_REPLY).run {
             setLabel(replyLabel)
             build()
@@ -106,12 +67,58 @@ class MyfirebaseMessageService: FirebaseMessagingService() {
                 replyPendingIntent
             ).addRemoteInput(remoteInput).build()
         )
+
+
+        //  content 클릭 이벤트 설정
         val intent = Intent(this, MainActivity::class.java).run {
             putExtra("zz", "hi")
             // 동작 정의 필요. RemoteMessage 전달하거나, flag 추가 등
         }
         val dd = PendingIntent.getActivity(this, 50, intent, PendingIntent.FLAG_IMMUTABLE)
         builder.setContentIntent(dd)
+
+
         manager.notify(11, builder.build())
+    }
+
+    private fun getChannelBuilder(manager: NotificationManager): NotificationCompat.Builder {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            //  26버전 이상
+            val channelId = "one-channel"
+            val channelName = "JaeHyeon`s Channel One"
+            val channel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "JH`s Channel One Description"    //  채널 설명
+
+                setShowBadge(true)  //  홈 화면 뱃지 아이콘 출력 여부 - 미확인 알림갯수 표시
+
+
+                // 사운드 설정
+                val uri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                val audioAttributes = AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .build()
+                setSound(uri, audioAttributes)
+
+                //  진동 설정
+                enableVibration(true)   //  진동 울림 여부
+//                    //  진동 패턴
+//                    vibrationPattern = longArrayOf(100, 200, 300)
+//                    //  불빛 표시 여부
+//                    enableLights(true)
+//                    //  불빛 색상
+//                    lightColor = Color.RED
+            }
+
+            manager.createNotificationChannel(channel)
+            NotificationCompat.Builder(this, channelId)
+        } else {
+            //  26버전 이하
+            NotificationCompat.Builder(this)
+        }
     }
 }
