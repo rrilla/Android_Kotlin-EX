@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/remocon_layout_radius"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageView_remote_cancel"
+        android:layout_gravity="right"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="12dp"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <TextView
+        android:id="@+id/textView_remote_title"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Smart Remote"
+        android:textFontWeight="700"
+        android:textSize="20dp" />
+
+    <LinearLayout
+        android:layout_marginTop="46.6dp"
+        android:paddingHorizontal="5.5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="8dp"-->
+<!--            android:layout_weight="1"-->
+<!--            app:layout_constraintDimensionRatio="1:1"-->
+<!--            android:background="@drawable/shape_button"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Button" />-->
+
+<!--        <TextView-->
+<!--            android:layout_marginHorizontal="8dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            app:layout_constraintDimensionRatio="1:1"-->
+<!--            android:background="@drawable/shape_button"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Button" />-->
+
+<!--        <TextView-->
+<!--            android:layout_marginHorizontal="8dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            app:layout_constraintDimensionRatio="1:1"-->
+<!--            android:background="@drawable/shape_button"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Button" />-->
+
+
+<!--        <TextView-->
+<!--            android:layout_marginHorizontal="8dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            app:layout_constraintDimensionRatio="1:1"-->
+<!--            android:background="@drawable/shape_button"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Button" />-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_remote_practice"
+                android:layout_marginHorizontal="8dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                android:background="@drawable/remocon_button_radius"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Button"
+                tools:ignore="MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_remote_target"
+                android:layout_marginHorizontal="8dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                android:background="@drawable/remocon_button_radius"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Button"
+                tools:ignore="MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_remote_unit"
+                android:layout_marginHorizontal="8dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                android:background="@drawable/remocon_button_radius"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Button"
+                tools:ignore="MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_remote_language"
+                android:layout_marginHorizontal="8dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                android:background="@drawable/remocon_button_radius"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Button"
+                tools:ignore="MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingHorizontal="10.18dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_remote_volume"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:text="0" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_remote_volume_minus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center"
+                    android:background="@drawable/remocon_button_radius_left"
+                    android:text="VOL" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_remote_volume_plus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="left|center"
+                    android:background="@drawable/remocon_button_radius_right"
+                    android:text="UME" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_remote_volume_mute"
+                android:layout_marginHorizontal="21.5dp"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@drawable/remocon_button_radius_58"
+                android:text="mute" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_remote_loft"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_remote_loft_minus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center"
+                    android:background="@drawable/remocon_button_radius_left"
+                    android:text="LO" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_remote_loft_plus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="left|center"
+                    android:background="@drawable/remocon_button_radius_right"
+                    android:text="FT" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginHorizontal="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_remote_target"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_remote_target_minus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center"
+                    android:background="@drawable/remocon_button_radius_left"
+                    android:text="TAR" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_remote_target_plus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="left|center"
+                    android:background="@drawable/remocon_button_radius_right"
+                    android:text="GET" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingHorizontal="6.5dp"
+        android:layout_marginTop="30.21dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_remote_"
+            android:layout_marginHorizontal="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="9.5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="9.5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="9.5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginHorizontal="3.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/remocon_button_radius_8"
+            android:text="Button" />
+    </LinearLayout>
+</LinearLayout>

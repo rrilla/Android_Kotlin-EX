@@ -38,6 +38,13 @@
                 android:layout_height="wrap_content"
                 android:text="Toggle modal dismiss animation" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/moveTestActivity"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Move TestActivity" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
