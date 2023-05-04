@@ -13,4 +13,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Structure"
-include ':app'
+include ':presentaion'
+include ':data'
+include ':domain'
