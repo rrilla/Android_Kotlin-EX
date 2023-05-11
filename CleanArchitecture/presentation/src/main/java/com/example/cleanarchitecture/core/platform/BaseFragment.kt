@@ -23,6 +23,7 @@ import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.example.cleanarchitecture.R
 import com.example.cleanarchitecture.core.extenstion.appContext
 import com.example.cleanarchitecture.core.extenstion.viewContainer
@@ -31,15 +32,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 abstract class BaseFragment : Fragment() {
-
-    abstract fun layoutId(): Int
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View =
-        inflater.inflate(layoutId(), container, false)
 
     open fun onBackPressed() {}
 
