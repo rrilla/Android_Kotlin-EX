@@ -40,7 +40,7 @@ class HomeFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         with (viewModel) {
-            observe2(uiState, ::renderUiState)
+            observe(uiState, ::renderUiState)
             failure(failure, ::handleFailure)
         }
     }
@@ -52,6 +52,11 @@ class HomeFragment : BaseFragment() {
         viewModel.loadMovies().also {
             showProgress()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun initializeView() = with (binding) {
@@ -67,10 +72,11 @@ class HomeFragment : BaseFragment() {
         Log.e("HJH", "uiState - $uiState")
 
         moviesAdapter.collection = uiState?.data.orEmpty()
+        hideProgress()
     }
 
     private fun handleFailure(failure: Failure?) {
-        when (failure) {
+        when (failure ?: return) {
             is Failure.NetworkConnection -> renderFailure(R.string.failure_network_connection)
             is Failure.ServerError -> renderFailure(R.string.failure_server_error)
             is HomeFailure.ListNotAvailable -> renderFailure(R.string.failure_movies_list_unavailable)

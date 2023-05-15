@@ -19,11 +19,14 @@ import androidx.lifecycle.*
 import com.example.samplecleanarchitecture.core.exception.Failure
 import kotlinx.coroutines.flow.StateFlow
 
-fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T?) -> Unit) =
-    liveData.observe(this, Observer(body))
+//fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T?) -> Unit) =
+//    liveData.observe(this, Observer(body))
+//
+//fun <L : LiveData<Failure>> LifecycleOwner.failure(liveData: L, body: (Failure?) -> Unit) =
+//    liveData.observe(this, Observer(body))
 
-fun <L : LiveData<Failure>> LifecycleOwner.failure(liveData: L, body: (Failure?) -> Unit) =
-    liveData.observe(this, Observer(body))
+fun <T : Any, L : StateFlow<T>> LifecycleOwner.observe(flow: L, body: (T?) -> Unit) =
+    this.lifecycleScope.launchWhenStarted { flow.collect(body) }
 
-fun <T : Any, L : StateFlow<T>> LifecycleOwner.observe2(flow: L, body: (T?) -> Unit) =
+fun <L : StateFlow<Failure?>> LifecycleOwner.failure(flow: L, body: (Failure?) -> Unit) =
     this.lifecycleScope.launchWhenStarted { flow.collect(body) }

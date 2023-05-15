@@ -17,6 +17,8 @@ package com.example.samplecleanarchitecture.core.platform
 
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.ProgressBar
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -39,7 +41,7 @@ abstract class BaseFragment : Fragment() {
     internal fun hideProgress() = progressStatus(View.GONE)
 
     private fun progressStatus(viewStatus: Int) =
-        with(activity) { if (this is BaseActivity<*>) this.findViewById<ConstraintLayout>(R.id.progress).visibility = viewStatus }
+        with(activity) { if (this is BaseActivity<*>) this.findViewById<FrameLayout>(R.id.progress).visibility = viewStatus }
 
     internal fun notify(@StringRes message: Int) =
         Snackbar.make(viewContainer, message, Snackbar.LENGTH_SHORT).show()
