@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.samplecleanarchitecture.core.interactor.UseCase.None
 import com.example.samplecleanarchitecture.core.platform.BaseViewModel
 import com.example.samplecleanarchitecture.domain.model.Movie
+import com.example.samplecleanarchitecture.domain.usecase.GetMovieDetails
 import com.example.samplecleanarchitecture.domain.usecase.GetMovies
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,17 +16,26 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel
 @Inject constructor(
-    private val getMovies : GetMovies
+    private val getMovies : GetMovies,
+    private val getMovieDetails: GetMovieDetails,
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    fun loadMovies() = getMovies(None(), viewModelScope) { it.fold(::handleFailure, ::handleMovieList) }
+    fun loadMovies() = getMovies(None(), viewModelScope, ::handleLoading) {
+        it.fold(::handleFailure) {
+            _uiState.update { uiState ->
+                uiState.copy(movies = it)
+            }
+        }
+    }
 
-    private fun handleMovieList(movies: List<Movie>) {
-        _uiState.update { uiState ->
-            uiState.copy(data = movies.map { HomeUiState.UiMovie(it.id, it.poster) })
+    fun loadMovieDetails(movieId: Int) = getMovieDetails(GetMovieDetails.Params(movieId), viewModelScope, ::handleLoading) {
+        it.fold(::handleFailure) {
+            _uiState.update { uiState ->
+                uiState.copy(movieDetail = it)
+            }
         }
     }
 }

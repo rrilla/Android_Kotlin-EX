@@ -5,13 +5,16 @@ import com.example.samplecleanarchitecture.core.functional.Either
 import com.example.samplecleanarchitecture.core.functional.Either.Left
 import com.example.samplecleanarchitecture.core.functional.Either.Right
 import com.example.samplecleanarchitecture.core.platform.NetworkHandler
+import com.example.samplecleanarchitecture.data.MovieDetailsEntity
 import com.example.samplecleanarchitecture.data.service.MoviesService
 import com.example.samplecleanarchitecture.domain.model.Movie
+import com.example.samplecleanarchitecture.domain.model.MovieDetails
 import retrofit2.Call
 import javax.inject.Inject
 
 interface MoviesRepository {
     fun movies(): Either<Failure, List<Movie>>
+    fun movieDetails(movieId: Int): Either<Failure, MovieDetails>
 
     class Network
     @Inject constructor(
@@ -25,6 +28,17 @@ interface MoviesRepository {
                     service.movies(),
                     { it.map { movieEntity -> movieEntity.toMovie() } },
                     emptyList()
+                )
+                false -> Left(Failure.NetworkConnection)
+            }
+        }
+
+        override fun movieDetails(movieId: Int): Either<Failure, MovieDetails> {
+            return when (networkHandler.isNetworkAvailable()) {
+                true -> request(
+                    service.movieDetails(movieId),
+                    { it.toMovieDetails() },
+                    MovieDetailsEntity.empty
                 )
                 false -> Left(Failure.NetworkConnection)
             }

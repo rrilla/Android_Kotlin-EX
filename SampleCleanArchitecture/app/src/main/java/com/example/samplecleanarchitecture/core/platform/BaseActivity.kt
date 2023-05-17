@@ -44,7 +44,7 @@ abstract class BaseActivity<VB: ViewBinding> : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        (supportFragmentManager.findFragmentById(R.id.contentLayout) as BaseFragment).onBackPressed()
+//        (supportFragmentManager.findFragmentById(R.id.contentLayout) as BaseFragment).onBackPressed()
         super.onBackPressed()
     }
 }

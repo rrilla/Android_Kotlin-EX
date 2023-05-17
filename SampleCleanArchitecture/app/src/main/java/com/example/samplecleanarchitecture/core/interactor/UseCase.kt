@@ -18,6 +18,7 @@ package com.example.samplecleanarchitecture.core.interactor
 import com.example.samplecleanarchitecture.core.exception.Failure
 import com.example.samplecleanarchitecture.core.functional.Either
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * Abstract class for a Use Case (Interactor in terms of Clean Architecture).
@@ -34,13 +35,18 @@ abstract class UseCase<out Type, in Params> where Type : Any {
     operator fun invoke(
         params: Params,
         scope: CoroutineScope = GlobalScope,
+        loadingFlow: (Boolean) -> Unit,
         onResult: (Either<Failure, Type>) -> Unit = {}
     ) {
         scope.launch(Dispatchers.Main) {
+            loadingFlow.invoke(true)
+
             val deferred = async(Dispatchers.IO) {
                 run(params)
             }
             onResult(deferred.await())
+
+            loadingFlow.invoke(false)
         }
     }
 

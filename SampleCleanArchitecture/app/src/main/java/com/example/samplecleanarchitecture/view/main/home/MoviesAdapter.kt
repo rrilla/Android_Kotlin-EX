@@ -6,17 +6,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.samplecleanarchitecture.databinding.ItemRowMovieBinding
+import com.example.samplecleanarchitecture.domain.model.Movie
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
 class MoviesAdapter
 @Inject constructor() : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    internal var collection: List<HomeUiState.UiMovie> by Delegates.observable(emptyList()) { _, _, _ ->
+    internal var collection: List<Movie> by Delegates.observable(emptyList()) { _, _, _ ->
         notifyDataSetChanged()
     }
 
-    internal var clickListener: (HomeUiState.UiMovie) -> Unit = {}
+    internal var clickListener: (Movie) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(ItemRowMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -26,8 +27,8 @@ class MoviesAdapter
 
     override fun getItemCount() = collection.size
 
-    class ViewHolder(val binding: ItemRowMovieBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(movieView: HomeUiState.UiMovie, clickListener: (HomeUiState.UiMovie) -> Unit) {
+    class ViewHolder(private val binding: ItemRowMovieBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(movieView: Movie, clickListener: (Movie) -> Unit) {
             binding.moviePoster.apply {
                 Glide.with(this.context.applicationContext)
                     .load(movieView.poster)

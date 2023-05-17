@@ -2,6 +2,7 @@ package com.example.samplecleanarchitecture.data
 
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 internal interface MoviesApi {
     companion object {
@@ -12,4 +13,7 @@ internal interface MoviesApi {
 
     @GET(MOVIES)
     fun movies(): Call<List<MovieEntity>>
+
+    @GET(MOVIE_DETAILS)
+    fun movieDetails(@Path(PARAM_MOVIE_ID) movieId: Int): Call<MovieDetailsEntity>
 }
