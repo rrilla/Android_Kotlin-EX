@@ -7,6 +7,7 @@ import com.example.samplecleanarchitecture.core.extension.inTransaction
 import com.example.samplecleanarchitecture.core.platform.BaseActivity
 import com.example.samplecleanarchitecture.databinding.ActivityMainBinding
 import com.example.samplecleanarchitecture.view.main.home.HomeFragment
+import com.example.samplecleanarchitecture.view.main.permission.PermissionFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,7 +20,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         supportFragmentManager.inTransaction {
             add(
                 R.id.fragmentContainer,
-                HomeFragment()
+//                HomeFragment()
+                PermissionFragment()
             )
         }
     }

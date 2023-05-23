@@ -15,17 +15,34 @@
  */
 package com.example.samplecleanarchitecture.core.platform
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.example.samplecleanarchitecture.R
 import com.example.samplecleanarchitecture.databinding.ActivityLayoutBinding
-import dagger.hilt.android.AndroidEntryPoint
 
 abstract class BaseActivity<VB: ViewBinding> : AppCompatActivity() {
 
     abstract fun inflateViewBinding(inflater: LayoutInflater): VB
+
+    private var success = {}
+    private var failure = {}
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if (it) {
+            success.invoke()
+        } else {
+            failure.invoke()
+            Log.e("HJH", "거절했음.")
+        }
+    }
 
     private var _binding: VB? = null
     val binding get() = _binding!!
@@ -46,5 +63,32 @@ abstract class BaseActivity<VB: ViewBinding> : AppCompatActivity() {
     override fun onBackPressed() {
 //        (supportFragmentManager.findFragmentById(R.id.contentLayout) as BaseFragment).onBackPressed()
         super.onBackPressed()
+    }
+
+    fun checkPermission(context: Context, permission: String, success: () -> Unit, failure: () -> Unit) {
+        this.success = success
+        this.failure = failure
+        when {
+            ContextCompat.checkSelfPermission(
+                context,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                this.success.invoke()
+            }
+            Build.VERSION.SDK_INT >= 23 &&
+            shouldShowRequestPermissionRationale(permission) -> {
+                AlertDialog.Builder(context).apply {
+                    setMessage("권한수락해주삼")
+                    setPositiveButton("확인") { dialog, _ ->
+                        permissionLauncher.launch(permission)
+                        dialog.dismiss()
+                    }
+                }.show()
+            }
+            else -> {
+                permissionLauncher.launch(
+                    permission)
+            }
+        }
     }
 }
