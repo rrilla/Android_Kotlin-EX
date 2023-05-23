@@ -5,4 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".view.main.home.HomeFragment">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="클릭"
+        android:id="@+id/button"/>
+
 </FrameLayout>
