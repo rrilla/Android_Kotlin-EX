@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "TestLab"
 include ':app'
 include ':foreground-service'
+include ':permission'
