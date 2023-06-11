@@ -85,6 +85,7 @@ class PermissionManager @Inject constructor(
         }
     }
 
+    //  권한 거절했을 시 메시지.
     private fun getMessageToPermissionDenied(permissionMember: PermissionMember): String {
         return when (permissionMember) {
             PermissionMember.POST_NOTIFICATIONS -> "알림 권한 거부로 인해 해당 기능을 사용할 수 없습니다."
@@ -93,7 +94,7 @@ class PermissionManager @Inject constructor(
         }
     }
 
-    // TODO: 거절 시 해당 권한 왜 필요한지 가이드.
+    // 사용자가 해당 권한 요청을 명시적으로 거부했을 때 메시지.
     private fun showInContextUI(permissionMember: PermissionMember, launcher: ActivityResultLauncher<String>) {
         Log.e("HJH", "showInContextUI() - ${permissionMember.name}")
         val message = when (permissionMember) {
