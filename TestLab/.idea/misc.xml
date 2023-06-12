@@ -4,7 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/hjh/test/android/Android_Kotlin-EX/TestLab/app/foreground-service/src/main/res/layout/activity_main.xml" value="0.1828125" />
+        <entry key="..\:/hjh/test/android/Android_Kotlin-EX/TestLab/backgroundplayer/src/main/res/layout/activity_main.xml" value="0.16458333333333333" />
         <entry key="..\:/hjh/test/android/Android_Kotlin-EX/TestLab/foreground-service/src/main/res/layout/activity_main.xml" value="0.19739583333333333" />
+        <entry key="..\:/hjh/test/android/Android_Kotlin-EX/TestLab/permission/src/main/res/layout/activity_main.xml" value="0.14895833333333333" />
       </map>
     </option>
   </component>
