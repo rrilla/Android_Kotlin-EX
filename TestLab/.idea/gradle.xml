@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/backgroundplayer" />
             <option value="$PROJECT_DIR$/foreground-service" />
+            <option value="$PROJECT_DIR$/music" />
             <option value="$PROJECT_DIR$/permission" />
           </set>
         </option>
