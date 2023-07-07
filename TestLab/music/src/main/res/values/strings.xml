@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">music</string>
+
+    <!-- Notificaiton Channel -->
+    <string name="notification_channel">Now Playing</string>
+    <string name="notification_channel_description">Shows what music is currently playing in App</string>
+
+    <!-- Error messages -->
+    <string name="error_media_not_found">요청한 미디어를 찾을 수 없습니다.</string>
+    <string name="generic_error">응용 프로그램에 예기치 않은 오류가 발생했습니다.</string>
 </resources>

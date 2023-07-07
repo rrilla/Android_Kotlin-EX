@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -44,5 +45,33 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    api "androidx.media:media:1.6.0"
+    api "androidx.media:media:$androidx_media_version"
+
+    // ExoPlayer dependencies
+
+    // This allows UAMP to utilize a local version of ExoPlayer, which is particularly
+    // useful for extending the MediaSession extension, as well as for testing and
+    // customization. If the ":exoplayer-library-core" project is included, we assume
+    // the others are included as well.
+
+    // ExoPlayer 종속성
+    // 이를 통해 UAMP는 특히 ExoPlayer의 로컬 버전을 활용할 수 있습니다
+    // MediaSession 확장을 확장하는 데 유용할 뿐만 아니라
+    // 맞춤 제작. ":exopplayer-library-core" 프로젝트가 포함된 경우, 우리는 다음과 같이 가정합니다
+    // 다른 것들도 포함되어 있습니다.
+    if (findProject(':exoplayer-library-core') != null) {
+        api project(':exoplayer-library-core')
+        api project(':exoplayer-library-ui')
+        api project(':exoplayer-extension-mediasession')
+        api project(':exoplayer-extension-cast')
+    } else {
+        api "com.google.android.exoplayer:exoplayer-core:$exoplayer_version"
+        api "com.google.android.exoplayer:exoplayer-ui:$exoplayer_version"
+        api "com.google.android.exoplayer:extension-mediasession:$exoplayer_version"
+        api "com.google.android.exoplayer:extension-cast:$exoplayer_version"
+    }
+
+    // Glide dependencies
+    api "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 }

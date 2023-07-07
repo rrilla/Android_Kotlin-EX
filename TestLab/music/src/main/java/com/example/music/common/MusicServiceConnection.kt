@@ -15,6 +15,8 @@ import androidx.media.MediaBrowserServiceCompat
 import com.example.music.extensions.id
 
 class MusicServiceConnection(context: Context, serviceComponent: ComponentName) {
+    private val TAG = this::class.java.simpleName
+
     val isConnected = MutableLiveData<Boolean>()
         .apply { postValue(false) }
     val networkFailure = MutableLiveData<Boolean>()
