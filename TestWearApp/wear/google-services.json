@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1037824439889",
+    "project_id": "test-wear-d1b9a",
+    "storage_bucket": "test-wear-d1b9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1037824439889:android:51123d3add3843da6bea70",
+        "android_client_info": {
+          "package_name": "com.example.testwearapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKKzV6lPZxjAnUb45BwYMMyn2fRYh5t5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

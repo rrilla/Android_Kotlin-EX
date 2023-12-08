@@ -10,8 +10,6 @@ import java.io.File
 
 
 class DownloadAndInstallApk {
-
-
     companion object {
         private var instance: DownloadAndInstallApk? = null
 
@@ -22,7 +20,7 @@ class DownloadAndInstallApk {
             }
     }
 
-    fun String.getFileName(defName:String = ""): String {
+    fun String.getFileName(defName: String = ""): String {
         var fileName:String? = null
         try {
             val uri = Uri.parse(this)
@@ -39,7 +37,8 @@ class DownloadAndInstallApk {
                 DownloadApkService.fileDir(FileType.APK.toString()).apply {
                     mkdirs()
                 },
-                apkUrl.getFileName("tmp.apk").also { Log.e("HJH", "fileName = $it") }
+//                apkUrl.getFileName("tmp.apk").also { Log.e("HJH", "fileName = $it") }
+                "${DownloadApkService.defName}${FileType.APK.extension}"
             )
         Log.e("HJH", "filePath :  ${file.path}")
 
@@ -49,25 +48,13 @@ class DownloadAndInstallApk {
             file
         )
 
-        val openFileIntent = Intent(Intent.ACTION_VIEW)
-        openFileIntent.apply {
+        val openFileIntent = Intent(Intent.ACTION_VIEW).apply {
             putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
 //            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 //            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             setDataAndType(apkUri, "application/vnd.android.package-archive")
-
-
-
-
-
-            //삭제
-//            val packageURI = Uri.parse("package:" + PACKAGE_NAME)
-//            val deleteIntent = Intent(Intent.ACTION_DELETE, packageURI)
-//            startActivity(deleteIntent)
-
-
         }
         return openFileIntent
     }

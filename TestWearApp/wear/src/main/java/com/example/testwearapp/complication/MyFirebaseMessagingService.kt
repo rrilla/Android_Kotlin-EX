@@ -122,12 +122,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setContentTitle("setContentTitle")
             .setContentText("setContentText")
             .setSmallIcon(R.drawable.btn_minus)
-            .setLargeIcon(
-                BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.ic_lock_idle_alarm
-                )
-            )
+//            .setLargeIcon(
+//                BitmapFactory.decodeResource(
+//                    resources,
+//                    R.drawable.ic_lock_idle_alarm
+//                )
+//            )
             .setDefaults(NotificationCompat.DEFAULT_ALL) // Set primary color (important for Wear 2.0 Notifications).
             .setColor(ContextCompat.getColor(applicationContext, R.color.holo_purple))
             .setCategory(Notification.CATEGORY_REMINDER) // Sets priority for 25 and below. For 26 and above, 'priority' is deprecated for
@@ -163,4 +163,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
     }
+
+
+
 }

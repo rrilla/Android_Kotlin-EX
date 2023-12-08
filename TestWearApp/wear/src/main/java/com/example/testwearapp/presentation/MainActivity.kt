@@ -14,6 +14,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -84,6 +85,11 @@ class MainActivity : ComponentActivity() {
                 Log.d("HJH", token)
             })
 
+//            val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+//            intent.data = Uri.parse(String.format("package:%s", "com.example.testwearapp"))
+//
+//            startActivity(intent)
+
         }
     }
 }
@@ -109,10 +115,10 @@ fun WearApp(greetingName: String) {
                 serviceIntent.putExtra(APK_EXTRA, "https://drive.google.com/u/0/uc?id=1HpwCvxItLxQ6p280X9xiEMTuZtV84syF&export=download&confirm=t&uuid=d249b990-512e-4b46-99bf-290cf76d0d5a&at=AB6BwCCzfIvHwbSq-01dZsPGp7uU:1701305780172")
                 serviceIntent.putExtra(FILE_TYPE, FileType.APK.toString())
                 serviceIntent.putExtra(FILE_EXTENSION, FileType.APK.extension)
-                serviceIntent.putExtra(FILE_NOTIFICATION, true)
 
                 DownloadApkService.enqueueWork(App.get(), serviceIntent)
             }) {}
+
 //            AsyncImage(
 //                model = "http://192.168.0.53:9405/public/baby12.jpg",
 //                contentDescription = "Translated description of what the image contains"
