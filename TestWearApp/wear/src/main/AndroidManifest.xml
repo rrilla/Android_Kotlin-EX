@@ -27,6 +27,10 @@
             android:name="android.support.FILE_PROVIDER_PATHS"
             android:resource="@xml/file_paths" />
         </provider>
+        <service
+            android:name=".complication.handler.CallIntentService"
+            android:exported="false" />
+
 
 
 
@@ -62,7 +66,7 @@
         </service>
 
         <service
-            android:name=".complication.MyFirebaseMessagingService"
+            android:name=".complication.MyFirebaseMessagingService2"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

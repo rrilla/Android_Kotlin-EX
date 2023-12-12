@@ -1,15 +1,21 @@
 package com.example.testwearnotification.presentation
 
+import android.Manifest
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Build
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.example.testwearnotification.R
+import com.example.testwearnotification.presentation.handler.CallIntentService
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -87,25 +93,25 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         // In our case, we create two additional actions: a Snooze action and a Dismiss action.
 
         // Snooze Action.
-        val snoozeIntent = Intent(this, BigTextIntentService::class.java)
-        snoozeIntent.action = BigTextIntentService.ACTION_SNOOZE
-        val snoozePendingIntent = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_IMMUTABLE)
-        val snoozeAction: NotificationCompat.Action = NotificationCompat.Action.Builder(
+        val acceptIntent = Intent(this, CallIntentService::class.java).apply {
+            action = CallIntentService.ACTION_ACCEPT
+        }
+        val acceptPendingIntent = PendingIntent.getService(this, 0, acceptIntent, PendingIntent.FLAG_IMMUTABLE)
+        val acceptAction: NotificationCompat.Action = NotificationCompat.Action.Builder(
             com.google.android.gms.base.R.drawable.common_full_open_on_phone,
-            "Snooze",
-            snoozePendingIntent
+            "Accept",
+            acceptPendingIntent
         ).build()
 
         // Dismiss Action.
-        val dismissIntent = Intent(this, BigTextIntentService::class.java)
-        dismissIntent.action = BigTextIntentService.ACTION_DISMISS
+        val dismissIntent = Intent(this, CallIntentService::class.java)
+        dismissIntent.action = CallIntentService.ACTION_DISMISS
         val dismissPendingIntent = PendingIntent.getService(this, 0, dismissIntent, PendingIntent.FLAG_IMMUTABLE)
         val dismissAction: NotificationCompat.Action = NotificationCompat.Action.Builder(
-            R.drawable.ic_cancel_white_48dp,
+            androidx.core.R.drawable.notification_bg,
             "Dismiss",
             dismissPendingIntent
-        )
-            .build()
+        ).build()
 
 
         // 5. Build and issue the notification.
@@ -119,27 +125,26 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         val notificationCompatBuilder = NotificationCompat.Builder(
             applicationContext, notificationChannelId
         )
-        GlobalNotificationBuilder.setNotificationCompatBuilderInstance(notificationCompatBuilder)
         notificationCompatBuilder // BIG_TEXT_STYLE sets title and content.
             .setStyle(bigTextStyle)
-            .setContentTitle(bigTextStyleReminderAppData.getContentTitle())
-            .setContentText(bigTextStyleReminderAppData.getContentText())
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setContentTitle("zzzzzz제목")
+            .setContentText("zzzzzzz컨텐츠")
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setLargeIcon(
                 BitmapFactory.decodeResource(
                     resources,
-                    R.drawable.ic_alarm_white_48dp
+                    com.google.firebase.messaging.ktx.R.drawable.common_google_signin_btn_icon_dark_focused
                 )
             )
             .setDefaults(NotificationCompat.DEFAULT_ALL) // Set primary color (important for Wear 2.0 Notifications).
-            .setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
+//            .setColor(ContextCompat.getColor(applicationContext, ))
             .setCategory(Notification.CATEGORY_REMINDER) // Sets priority for 25 and below. For 26 and above, 'priority' is deprecated for
             // 'importance' which is set in the NotificationChannel. The integers representing
             // 'priority' are different from 'importance', so make sure you don't mix them.
-            .setPriority(bigTextStyleReminderAppData.getPriority()) // Sets lock-screen visibility for 25 and below. For 26 and above, lock screen
+            .setPriority(NotificationManager.IMPORTANCE_HIGH) // Sets lock-screen visibility for 25 and below. For 26 and above, lock screen
             // visibility is set in the NotificationChannel.
-            .setVisibility(bigTextStyleReminderAppData.getChannelLockscreenVisibility()) // Adds additional actions specified above.
-            .addAction(snoozeAction)
+//            .setVisibility(bigTextStyleReminderAppData.getChannelLockscreenVisibility()) // Adds additional actions specified above.
+            .addAction(acceptAction)
             .addAction(dismissAction)
 
         /* REPLICATE_NOTIFICATION_STYLE_CODE:
@@ -151,7 +156,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
 
             // Enables launching app in Wear 2.0 while keeping the old Notification Style behavior.
             val mainAction: NotificationCompat.Action = NotificationCompat.Action.Builder(
-                R.drawable.ic_launcher,
+                androidx.asynclayoutinflater.R.drawable.notification_bg,
                 "Open",
                 mainPendingIntent
             )
@@ -162,6 +167,20 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             notificationCompatBuilder.setContentIntent(mainPendingIntent)
         }
         val notification = notificationCompatBuilder.build()
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         mNotificationManagerCompat.notify(
             33,
             notification
